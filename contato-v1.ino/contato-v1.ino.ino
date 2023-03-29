@@ -61,7 +61,7 @@ void setup() {
     // initialize serial communication
     // (115200 chosen because it is required for Teapot Demo output, but it's
     // really up to you depending on your project)
-    SerialBT.begin("Contato-Performance - SIAC 1");
+    SerialBT.begin("SIAC-Red");
     Serial.begin(115200);
     while (!Serial); // wait for Leonardo enumeration, others continue immediately
 
@@ -140,19 +140,21 @@ void loop() {
 
        
           mpu.dmpGetQuaternion(&q, fifoBuffer);
+          mpu.dmpGetAccel(&aa, fifoBuffer);
           mpu.dmpGetGravity(&gravity, &q);
+          mpu.dmpGetLinearAccel(&aaReal, &aa, &gravity);
           mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);
 
   
         ypr_mod = ypr[2] * 180/M_PI;
 
     }
-    pressed = touchRead();
+    pressed = average();
     SerialBT.println("01/" + String(ypr_mod)+'/'+String(mediaAccel)+'/'+String(pressed));
     Serial.println("01/" + String(ypr_mod)+'/'+String(mediaAccel)+'/'+String(pressed));
 }
 
-int touchRead()
+int average()
 {
   int media = 0;
   mediaAccel = 0;
@@ -160,12 +162,10 @@ int touchRead()
   {
     media += touchRead(T3);
     mediaAccel += aaReal.z;
-    
   }
-  media =  media/100;
-  mediaAccel = mediaAccel/100;
-
-  if(media > 60)
+  media =  media/10;
+  mediaAccel = mediaAccel/10;
+  if(media < 70)
   {
     return 1;
   }
