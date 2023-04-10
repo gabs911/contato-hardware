@@ -8,7 +8,7 @@ COM7 - Testes
 '''
 #Alterar port de acordo com a saída bluetooth do contato
 
-serialPort = serial.Serial(port = "COM11", baudrate=115200, bytesize=8, timeout=2, stopbits=serial.STOPBITS_ONE)
+serialPort = serial.Serial(port = "COM6", baudrate=115200, bytesize=8, timeout=2, stopbits=serial.STOPBITS_ONE)
 serialString = ''
 
 midiout = rtmidi.MidiOut()
@@ -66,13 +66,13 @@ while(1):
     #print(accel)
     
     if((gyro//40) == -3):
-        #note = ('G4',67)
+        note = ('G4',67)
     elif((gyro//40) == -2):
-        #note = ('A4',69)
+        note = ('A4',69)
     elif((gyro//40) == -1):
-        #note = ('B4',71)
+        note = ('B4',71)
     elif((gyro//40) == 0):
-        #note = ('D5', 74)
+        note = ('D5', 74)
   
     
 
@@ -80,6 +80,7 @@ while(1):
     #print(touch)
 
 #Alteração na parte  if(touch <30): touch = 1 que foi removida dado ao fato que tava enviando sinal constante pro touch.
+#Comentar nas saidas miiidiout para desativar o touch
 
     if(touch == 1):
         lastDebounceTime = time.time()
@@ -99,15 +100,15 @@ while(1):
         if((time.time() - notes_delay[i] > noteHold)):
            #print(f"Off + " + str(note))
             if(notes[i] != note[1]):
-                #midiout.send_message([0x80,notes[i],100])
+                midiout.send_message([0x80,notes[i],100])
                 pass
             elif(touch !=1):
-                #midiout.send_message([0x80,note[1],100])
+                midiout.send_message([0x80,note[1],100])
                 pass
 
     #Mudar o valor para configurar a sensibilidade do acelerometro 
     
-    if(accel > 10 and (time.time() - previousSoundEffectActiv >= soundeEffectInterval)):
+    if(accel > 10000 and (time.time() - previousSoundEffectActiv >= soundeEffectInterval)):
         previousSoundEffectActiv = time.time()
         print("ACCEL DETECTED")
         midiout.send_message([0x91,21,120])
