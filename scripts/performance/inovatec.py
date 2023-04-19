@@ -115,4 +115,4 @@ while(1):
         previousSoundEffect = time.time()
         #print("ACCEL SOUND EFFECT OFF")
 
-        midiout.send_message([0x81,94,120]) #nota tem que ta igual nos dois midiout.sed_message do acel
+        midiout.send_message([0x81,94,120]) #nota tem que ta igual nos dois midiout.sed_message do accel
