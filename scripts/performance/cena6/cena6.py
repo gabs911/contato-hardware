@@ -2,7 +2,7 @@ import serial
 import time
 import rtmidi
 
-serialPort = serial.Serial(port = "COM4", baudrate=115200, bytesize=8, timeout=2, stopbits=serial.STOPBITS_ONE)
+serialPort = serial.Serial(port = "COM12", baudrate=115200, bytesize=8, timeout=2, stopbits=serial.STOPBITS_ONE)
 serialString = ''
 
 midiout = rtmidi.MidiOut()
@@ -107,10 +107,10 @@ while(1):
     if(accel > 4000 and (time.time() - previousSoundEffectActiv >= soundeEffectInterval)):
         previousSoundEffectActiv = time.time()
         print("ACCEL DETECTED")
-        #midiout.send_message([0x91,82,120])
+        midiout.send_message([0x91,82,120])
     
     if(time.time() - previousSoundEffectActiv >= soundEffectDuration):
         previousSoundEffect = time.time()
-        #print("ACCEL SOUND EFFECT OFF")
+        print("ACCEL SOUND EFFECT OFF")
         midiout.send_message([0x81,82,120])
 
