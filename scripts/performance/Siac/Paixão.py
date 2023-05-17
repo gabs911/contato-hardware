@@ -28,7 +28,7 @@ touch = 0
 #variables
 note = (0,'a')
 last_note = 32
-notes = [67,69,71,74]
+notes = [48,51,55,57]
 notes_delay = [0] * len(notes)
 lastDebounceTime = 0  
 debounceDelay = 0.1
@@ -66,15 +66,14 @@ while(1):
         touch = float(sensorData[3])
         #print(gyro,accel,touch)
     
-    if((gyro//40) == -3):
-        note = ('G4',67)
+   if((gyro//40) == -3):
+        note = ('G4',48)
     elif((gyro//40) == -2):
-        note = ('A4',69)
+        note = ('A4',51)
     elif((gyro//40) == -1):
-        note = ('B4',71)
+        note = ('B4',55)
     elif((gyro//40) == 0):
-        note = ('D5', 74)
-  
+        note = ('D5', 57)
     
 
     can = (note == last_note) and (time.time() - lastDebounceTime > 0.1)
@@ -112,10 +111,10 @@ while(1):
     if(accel > 8000 and (time.time() - previousSoundEffectActiv >= soundeEffectInterval)):
         previousSoundEffectActiv = time.time()
         print("ACCEL DETECTED")
-        midiout.send_message([0x95,69,120]) #parametro da nota segundo numero do midiout.sed_message
+        #midiout.send_message([0x95,69,120]) #parametro da nota segundo numero do midiout.sed_message
     
     if(time.time() - previousSoundEffectActiv >= soundEffectDuration):
         previousSoundEffect = time.time()
         #print("ACCEL SOUND EFFECT OFF")
 
-        midiout.send_message([0x85,69,120]) #nota tem que ta igual nos dois midiout.sed_message do accel
+        #midiout.send_message([0x85,69,120]) #nota tem que ta igual nos dois midiout.sed_message do accel
