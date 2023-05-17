@@ -63,8 +63,6 @@ while(1):
         touch = float(sensorData[3])
         #print(gyro,accel,touch)
     
-    #print(accel)
-    
     if((gyro//40) == -3):
         note = ('G4',67)
     elif((gyro//40) == -2):
@@ -87,13 +85,13 @@ while(1):
         if(note != last_note):
             assignTimes(note[1])
             last_note = note
-            #midiout.send_message([0x90,note[1],100])
+            midiout.send_message([0x90,note[1],100])
             print("MIDI ON" + str(time.time()))
         else:
             if(can == True):
                 last_note = note
                 assignTimes(note[1])
-                #midiout.send_message([0x90,note[1],100])
+                midiout.send_message([0x90,note[1],100])
                 print("MIDI ON"+ str(time.time()))
     
     for i in range(len(notes)):
@@ -107,14 +105,14 @@ while(1):
                 pass
 
     #Mudar o valor para configurar a sensibilidade do acelerometro 
-    #Loopmidi ta configurado no loopMIDI 1 canal 3
-    if(accel > 2000 and (time.time() - previousSoundEffectActiv >= soundeEffectInterval)):
+    
+    if(accel > 8000 and (time.time() - previousSoundEffectActiv >= soundeEffectInterval)):
         previousSoundEffectActiv = time.time()
         print("ACCEL DETECTED")
-        midiout.send_message([0x92,94,120])
+        midiout.send_message([0x91,69,120]) #parametro da nota segundo numero do midiout.sed_message
     
     if(time.time() - previousSoundEffectActiv >= soundEffectDuration):
         previousSoundEffect = time.time()
         #print("ACCEL SOUND EFFECT OFF")
 
-        midiout.send_message([0x82,94,120])
+        midiout.send_message([0x81,69,120]) #nota tem que ta igual nos dois midiout.sed_message do acel

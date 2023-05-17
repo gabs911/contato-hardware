@@ -8,7 +8,7 @@ COM7 - Testes
 '''
 #Alterar port de acordo com a saída bluetooth do contato
 
-serialPort = serial.Serial(port = "COM12", baudrate=115200, bytesize=8, timeout=2, stopbits=serial.STOPBITS_ONE)
+serialPort = serial.Serial(port = "COM6", baudrate=115200, bytesize=8, timeout=2, stopbits=serial.STOPBITS_ONE)
 serialString = ''
 
 midiout = rtmidi.MidiOut()
@@ -108,13 +108,13 @@ while(1):
 
     #Mudar o valor para configurar a sensibilidade do acelerometro 
     
-    if(accel > 2000 and (time.time() - previousSoundEffectActiv >= soundeEffectInterval)):
+    if(accel > 9000 and (time.time() - previousSoundEffectActiv >= soundeEffectInterval)):
         previousSoundEffectActiv = time.time()
         print("ACCEL DETECTED")
-        midiout.send_message([0x91,21,120])
+        midiout.send_message([0x91,69,120])
     
     if(time.time() - previousSoundEffectActiv >= soundEffectDuration):
         previousSoundEffect = time.time()
         #print("ACCEL SOUND EFFECT OFF")
 
-        midiout.send_message([0x81,21,120])
+        midiout.send_message([0x81,69,120])

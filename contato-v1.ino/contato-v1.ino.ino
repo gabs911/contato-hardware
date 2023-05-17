@@ -1,10 +1,10 @@
 
 #include "I2Cdev.h"
-#include "BluetoothSerial.h"
+#include "BluetoothSerial.h" //outro bluetooh não seria melhor?
 
 #include "MPU6050_6Axis_MotionApps20.h"
 
-#if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
+#if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE 
     #include "Wire.h"
 #endif
 
@@ -15,7 +15,7 @@ BluetoothSerial SerialBT;
 
 #define INTERRUPT_PIN 2  // use pin 2 on Arduino Uno & most boards
 #define LED_PIN 13 // (Arduino is 13, Teensy is 11, Teensy++ is 6)
-bool blinkState = false;
+bool blinkState = false; //O que é blinkState? 
 
 // MPU control/status vars
 bool dmpReady = false;  // set true if DMP init was successful
@@ -90,7 +90,7 @@ void setup() {
     if (devStatus == 0) {
         // Calibration Time: generate offsets and calibrate our MPU6050
         mpu.CalibrateAccel(6);
-        mpu.CalibrateGyro(6);
+        mpu.CalibrateGyro(6); //porque é 6?
         mpu.PrintActiveOffsets();
         // turn on the DMP, now that it's ready
         Serial.println(F("Enabling DMP..."));
