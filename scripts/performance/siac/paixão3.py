@@ -1,3 +1,6 @@
+#Canais do loopmidi 5 e 6
+
+
 import serial
 import time
 import rtmidi
@@ -17,12 +20,12 @@ port = midiout.open_port(1)
 
 
 
-#Sensor variables
+#Sensor variaveis
 gyro = 0
 accel = 0
 touch = 0
 
-#variables
+#variaveis 
 note = (0,'a')
 last_note = 32
 notes = [48,51,55,57]
@@ -84,23 +87,23 @@ while(1):
         if(note != last_note):
             assignTimes(note[1])
             last_note = note
-            midiout.send_message([0x97,note[1],100])
+            midiout.send_message([0x94,note[1],100])
             print("MIDI ON" + str(time.time()))
         else:
             if(can == True):
                 last_note = note
                 assignTimes(note[1])
-                midiout.send_message([0x97,note[1],100])
+                midiout.send_message([0x94,note[1],100])
                 print("MIDI ON"+ str(time.time()))
     
     for i in range(len(notes)):
         if((time.time() - notes_delay[i] > noteHold)):
            #print(f"Off + " + str(note))
             if(notes[i] != note[1]):
-                midiout.send_message([0x87,notes[i],100])
+                midiout.send_message([0x84,notes[i],100])
                 pass
             elif(touch !=1):
-                midiout.send_message([0x87,note[1],100])
+                midiout.send_message([0x84,note[1],100])
                 pass
 
     #Mudar o valor para configurar a sensibilidade do acelerometro 

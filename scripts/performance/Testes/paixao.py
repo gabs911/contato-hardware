@@ -5,7 +5,7 @@ import serial
 import time
 import rtmidi
 
-serialPort = serial.Serial(port = "COM13", baudrate=115200, bytesize=8, timeout=2, stopbits=serial.STOPBITS_ONE)
+serialPort = serial.Serial(port = "COM19", baudrate=115200, bytesize=8, timeout=2, stopbits=serial.STOPBITS_ONE)
 serialString = ''
 
 midiout = rtmidi.MidiOut()
@@ -27,9 +27,9 @@ notes_delay = [0] * len(notes)
 lastDebounceTime = 0  
 debounceDelay = 0.1
 noteHold = 0.2
-soundEffectDuration = 0.7
-previousSoundEffect = 0
-soundeEffectInterval = 1
+soundEffectDuration = 2
+previousSoundEffect = 3
+soundeEffectInterval = 2
 previousSoundEffectActiv = 0
 angle = 38.60 #descobrir como calcular esse angulo
 
@@ -111,6 +111,6 @@ while(1):
     
     if(time.time() - previousSoundEffectActiv >= soundEffectDuration):
         previousSoundEffect = time.time()
-        print("ACCEL SOUND EFFECT OFF")
+        #print("ACCEL SOUND EFFECT OFF")
         midiout.send_message([0x81,82,120])
 
