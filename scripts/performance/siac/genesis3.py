@@ -1,5 +1,3 @@
-#Canais do loopmidi 3 e 4
-
 
 import serial
 import time
@@ -11,7 +9,7 @@ COM7 - Testes
 '''
 #Alterar port de acordo com a saída bluetooth do contato
 
-serialPort = serial.Serial(port = "COM11", baudrate=115200, bytesize=8, timeout=2, stopbits=serial.STOPBITS_ONE)
+serialPort = serial.Serial(port = "COM13", baudrate=115200, bytesize=8, timeout=2, stopbits=serial.STOPBITS_ONE)
 serialString = ''
 
 midiout = rtmidi.MidiOut()

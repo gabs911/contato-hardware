@@ -1,4 +1,3 @@
-#Canais do loopmidi 1 e 2 
 
 import serial
 import time
