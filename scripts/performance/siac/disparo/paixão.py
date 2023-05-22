@@ -54,14 +54,15 @@ while(1):
 
         sensorData = (serialString.decode('utf-8')).split('/')
 
-        print(serialString)
+        #print(serialString)
 
         # Print the contents of the serial data
         id = float(sensorData[0])
         gyro = float(sensorData[1])
         accel = float(sensorData[2])
         touch = float(sensorData[3])
-        #print(gyro,accel,touch)
+        print('gyro:', gyro, 'acc:', accel, 't:', touch)
+
     #print(accel)
     
     if((gyro//40) == -3):
@@ -91,29 +92,29 @@ while(1):
             if(can == True):
                 last_note = note
                 assignTimes(note[1])
-                midiout.send_message([0x92,note[1],100])
+                midiout.send_message([0x95,note[1],100])
                 print("MIDI ON"+ str(time.time()))
     
     for i in range(len(notes)):
         if((time.time() - notes_delay[i] > noteHold)):
            #print(f"Off + " + str(note))
             if(notes[i] != note[1]):
-                midiout.send_message([0x82,notes[i],100])
+                midiout.send_message([0x85,notes[i],100])
                 pass
             elif(touch !=1):
-                midiout.send_message([0x82,note[1],100])
+                midiout.send_message([0x85,note[1],100])
                 pass
 
     #Mudar o valor para configurar a sensibilidade do acelerometro 
     
-    if(accel > 9000 and (time.time() - previousSoundEffectActiv >= soundeEffectInterval)):
+    if(accel > 8000 and (time.time() - previousSoundEffectActiv >= soundeEffectInterval)):
         previousSoundEffectActiv = time.time()
         print("ACCEL DETECTED")
-        #midiout.send_message([0x95,69,120]) #parametro da nota segundo numero do midiout.sed_message
+        #midiout.send_message([0x96,69,120]) #parametro da nota segundo numero do midiout.sed_message
     
     if(time.time() - previousSoundEffectActiv >= soundEffectDuration):
         previousSoundEffect = time.time()
         #print("ACCEL SOUND EFFECT OFF")
 
-        #midiout.send_message([0x85,69,120]) #nota tem que ta igual nos dois midiout.sed_message do accel
+        #midiout.send_message([0x86,69,120]) #nota tem que ta igual nos dois midiout.sed_message do accel
         

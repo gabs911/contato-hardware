@@ -90,23 +90,23 @@ while(1):
         if(note != last_note):
             assignTimes(note[1])
             last_note = note
-            midiout.send_message([0x94,note[1],100])
+            midiout.send_message([0x92,note[1],100])
             print("MIDI ON" + str(time.time()))
         else:
             if(can == True):
                 last_note = note
                 assignTimes(note[1])
-                midiout.send_message([0x94,note[1],100])
+                midiout.send_message([0x92,note[1],100])
                 print("MIDI ON"+ str(time.time()))
     
     for i in range(len(notes)):
         if((time.time() - notes_delay[i] > noteHold)):
            #print(f"Off + " + str(note))
             if(notes[i] != note[1]):
-                midiout.send_message([0x84,notes[i],100])
+                midiout.send_message([0x82,notes[i],100])
                 pass
             elif(touch !=1):
-                midiout.send_message([0x84,note[1],100])
+                midiout.send_message([0x82,note[1],100])
                 pass
 
     #Mudar o valor para configurar a sensibilidade do acelerometro 

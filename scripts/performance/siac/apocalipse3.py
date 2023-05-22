@@ -56,14 +56,14 @@ while(1):
 
         sensorData = (serialString.decode('utf-8')).split('/')
 
-        print(serialString)
+        #print(serialString)
 
         # Print the contents of the serial data
         id = float(sensorData[0])
         gyro = float(sensorData[1])
         accel = float(sensorData[2])
         touch = float(sensorData[3])
-        #print(gyro,accel,touch)
+        print('gyro:', gyro, 'acc:', accel, 't:', touch)
     
     if((gyro//40) == -3):
         note = ('G4',48)
@@ -108,7 +108,7 @@ while(1):
 
     #Mudar o valor para configurar a sensibilidade do acelerometro 
     
-    if(accel > 4000 and (time.time() - previousSoundEffectActiv >= soundeEffectInterval)):
+    if(accel > 8000 and (time.time() - previousSoundEffectActiv >= soundeEffectInterval)):
         previousSoundEffectActiv = time.time()
         print("ACCEL DETECTED")
         #midiout.send_message([0x91,69,120]) #parametro da nota segundo numero do midiout.sed_message

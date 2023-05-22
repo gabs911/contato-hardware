@@ -51,14 +51,14 @@ while(1):
 
         sensorData = (serialString.decode('utf-8')).split('/')
 
-        print(serialString)
+        #print(serialString)
 
         # Print the contents of the serial data
         id = float(sensorData[0])
         gyro = float(sensorData[1])
         accel = float(sensorData[2])
         touch = float(sensorData[3])
-        #print(gyro,accel,touch)
+        print('gyro:', gyro, 'acc:', accel, 't:', touch)
     
     #print(accel)
     
@@ -82,33 +82,33 @@ while(1):
         if(note != last_note):
             assignTimes(note[1])
             last_note = note
-            midiout.send_message([0x93,note[1],100])
+            midiout.send_message([0x94,note[1],100])
             print("MIDI ON" + str(time.time()))
         else:
             if(can == True):
                 last_note = note
                 assignTimes(note[1])
-                midiout.send_message([0x93,note[1],100])
+                midiout.send_message([0x94,note[1],100])
                 print("MIDI ON"+ str(time.time()))
     
     for i in range(len(notes)):
         if((time.time() - notes_delay[i] > noteHold)):
            #print(f"Off + " + str(note))
             if(notes[i] != note[1]):
-                midiout.send_message([0x83,notes[i],100])
+                midiout.send_message([0x84,notes[i],100])
                 pass
             elif(touch !=1):
-                midiout.send_message([0x83,note[1],100])
+                midiout.send_message([0x84,note[1],100])
                 pass
 
     
-    if(accel > 4000 and (time.time() - previousSoundEffectActiv >= soundeEffectInterval)):
+    if(accel > 8000 and (time.time() - previousSoundEffectActiv >= soundeEffectInterval)):
         previousSoundEffectActiv = time.time()
         print("ACCEL DETECTED")
-        midiout.send_message([0x91,82,120])
+        #midiout.send_message([0x91,82,120])
     
     if(time.time() - previousSoundEffectActiv >= soundEffectDuration):
         previousSoundEffect = time.time()
         #print("ACCEL SOUND EFFECT OFF")
-        midiout.send_message([0x81,82,120])
+        #midiout.send_message([0x81,82,120])
 
