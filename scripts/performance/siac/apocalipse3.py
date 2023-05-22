@@ -64,13 +64,13 @@ while(1):
         touch = float(sensorData[3])
         print('gyro:', gyro, 'acc:', accel, 't:', touch)
     
-    if((gyro//40) == -3):
+    if((gyro//40) == -2):
         note = ('G4',48)
-    elif((gyro//40) == -2):
-        note = ('A4',51)
     elif((gyro//40) == -1):
-        note = ('B4',55)
+        note = ('A4',51)
     elif((gyro//40) == 0):
+        note = ('B4',55)
+    elif((gyro//40) == 1):
         note = ('D5', 57)
   
     
