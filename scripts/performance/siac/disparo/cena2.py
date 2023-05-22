@@ -25,7 +25,7 @@ touch = 0
 #variables
 note = (0,'a')
 last_note = 32
-notes = [67,69,71,74]
+notes = [74,74,74,74]
 notes_delay = [0] * len(notes)
 lastDebounceTime = 0  
 debounceDelay = 0.1
@@ -64,11 +64,11 @@ while(1):
         print('gyro:', gyro, 'acc:', accel, 't:', touch)
     
     if((gyro//40) == -3):
-        note = ('G4',67)
+        note = ('G4',74)
     elif((gyro//40) == -2):
-        note = ('A4',69)
+        note = ('A4',74)
     elif((gyro//40) == -1):
-        note = ('B4',71)
+        note = ('B4',74)
     elif((gyro//40) == 0):
         note = ('D5', 74)
   
