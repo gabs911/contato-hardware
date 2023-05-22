@@ -8,7 +8,7 @@ COM7 - Testes
 '''
 #Alterar port de acordo com a saída bluetooth do contato
 
-serialPort = serial.Serial(port = "COM13", baudrate=115200, bytesize=8, timeout=2, stopbits=serial.STOPBITS_ONE)
+serialPort = serial.Serial(port = "COM11", baudrate=115200, bytesize=8, timeout=2, stopbits=serial.STOPBITS_ONE)
 serialString = ''
 
 midiout = rtmidi.MidiOut()
@@ -85,23 +85,23 @@ while(1):
         if(note != last_note):
             assignTimes(note[1])
             last_note = note
-            midiout.send_message([0x96,note[1],100])
+            midiout.send_message([0x98,note[1],100])
             print("MIDI ON" + str(time.time()))
         else:
             if(can == True):
                 last_note = note
                 assignTimes(note[1])
-                midiout.send_message([0x96,note[1],100])
+                midiout.send_message([0x98,note[1],100])
                 print("MIDI ON"+ str(time.time()))
     
     for i in range(len(notes)):
         if((time.time() - notes_delay[i] > noteHold)):
            #print(f"Off + " + str(note))
             if(notes[i] != note[1]):
-                midiout.send_message([0x86,notes[i],100])
+                midiout.send_message([0x88,notes[i],100])
                 pass
             elif(touch !=1):
-                midiout.send_message([0x86,note[1],100])
+                midiout.send_message([0x88,note[1],100])
                 pass
 
     #Mudar o valor para configurar a sensibilidade do acelerometro 

@@ -25,7 +25,7 @@ touch = 0
 #variables
 note = (0,'a')
 last_note = 32
-notes = [67,69,71,74]
+notes = [48,51,55,57]
 notes_delay = [0] * len(notes)
 lastDebounceTime = 0  
 debounceDelay = 0.1
@@ -62,16 +62,16 @@ while(1):
         accel = float(sensorData[2])
         touch = float(sensorData[3])
         #print(gyro,accel,touch)
+    #print(accel)
     
     if((gyro//40) == -3):
-        note = ('G4',67)
+        note = ('G4',48)
     elif((gyro//40) == -2):
-        note = ('A4',69)
+        note = ('A4',51)
     elif((gyro//40) == -1):
-        note = ('B4',71)
+        note = ('B4',55)
     elif((gyro//40) == 0):
-        note = ('D5', 74)
-  
+        note = ('D5', 57)
     
 
     can = (note == last_note) and (time.time() - lastDebounceTime > 0.1)
@@ -85,23 +85,23 @@ while(1):
         if(note != last_note):
             assignTimes(note[1])
             last_note = note
-            midiout.send_message([0x98,note[1],100])
+            midiout.send_message([0x92,note[1],100])
             print("MIDI ON" + str(time.time()))
         else:
             if(can == True):
                 last_note = note
                 assignTimes(note[1])
-                midiout.send_message([0x98,note[1],100])
+                midiout.send_message([0x92,note[1],100])
                 print("MIDI ON"+ str(time.time()))
     
     for i in range(len(notes)):
         if((time.time() - notes_delay[i] > noteHold)):
            #print(f"Off + " + str(note))
             if(notes[i] != note[1]):
-                midiout.send_message([0x88,notes[i],100])
+                midiout.send_message([0x82,notes[i],100])
                 pass
             elif(touch !=1):
-                midiout.send_message([0x88,note[1],100])
+                midiout.send_message([0x82,note[1],100])
                 pass
 
     #Mudar o valor para configurar a sensibilidade do acelerometro 

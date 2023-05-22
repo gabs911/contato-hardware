@@ -1,5 +1,3 @@
-#Canais do loopmidi 1 e 2 
-
 import serial
 import time
 import rtmidi
@@ -10,7 +8,7 @@ COM7 - Testes
 '''
 #Alterar port de acordo com a saída bluetooth do contato
 
-serialPort = serial.Serial(port = "COM19", baudrate=115200, bytesize=8, timeout=2, stopbits=serial.STOPBITS_ONE)
+serialPort = serial.Serial(port = "COM6", baudrate=115200, bytesize=8, timeout=2, stopbits=serial.STOPBITS_ONE)
 serialString = ''
 
 midiout = rtmidi.MidiOut()
@@ -27,7 +25,7 @@ touch = 0
 #variables
 note = (0,'a')
 last_note = 32
-notes = [48,51,55,57]
+notes = [67,69,71,74]
 notes_delay = [0] * len(notes)
 lastDebounceTime = 0  
 debounceDelay = 0.1
@@ -36,7 +34,7 @@ soundEffectDuration = 2
 previousSoundEffect = 3
 soundeEffectInterval = 2
 previousSoundEffectActiv = 0
-angle = 38.60
+angle = 180
 
 print(notes_delay)
 
@@ -65,14 +63,16 @@ while(1):
         touch = float(sensorData[3])
         #print(gyro,accel,touch)
     
+    #print(accel)
+    
     if((gyro//40) == -3):
-        note = ('G4',48)
+        note = ('G4',67)
     elif((gyro//40) == -2):
-        note = ('A4',51)
+        note = ('A4',69)
     elif((gyro//40) == -1):
-        note = ('B4',55)
+        note = ('B4',71)
     elif((gyro//40) == 0):
-        note = ('D5', 57)
+        note = ('D5', 74)
   
     
 
@@ -87,13 +87,13 @@ while(1):
         if(note != last_note):
             assignTimes(note[1])
             last_note = note
-            midiout.send_message([0x90,note[1],100])
+            #midiout.send_message([0x90,note[1],100])
             print("MIDI ON" + str(time.time()))
         else:
             if(can == True):
                 last_note = note
                 assignTimes(note[1])
-                midiout.send_message([0x90,note[1],100])
+                #midiout.send_message([0x90,note[1],100])
                 print("MIDI ON"+ str(time.time()))
     
     for i in range(len(notes)):
@@ -108,13 +108,13 @@ while(1):
 
     #Mudar o valor para configurar a sensibilidade do acelerometro 
     
-    if(accel > 4000 and (time.time() - previousSoundEffectActiv >= soundeEffectInterval)):
+    if(accel > 9000 and (time.time() - previousSoundEffectActiv >= soundeEffectInterval)):
         previousSoundEffectActiv = time.time()
         print("ACCEL DETECTED")
-        #midiout.send_message([0x91,69,120]) #parametro da nota segundo numero do midiout.sed_message
+        midiout.send_message([0x91,69,120])
     
     if(time.time() - previousSoundEffectActiv >= soundEffectDuration):
         previousSoundEffect = time.time()
         #print("ACCEL SOUND EFFECT OFF")
 
-        #midiout.send_message([0x81,69,120]) #nota tem que ta igual nos dois midiout.sed_message do accel
+        midiout.send_message([0x81,69,120])

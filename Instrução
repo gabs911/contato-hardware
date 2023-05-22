@@ -1,3 +1,19 @@
 Os scripts da pasta disparo são preparados para tocar a musica ao tocar no giroscopio
 Apos iniciar a musica parar o codigo para evitar que ela seja reiniciada
 
+C:/Users/grupo/AppData/Local/Microsoft/WindowsApps/python3.10.exe c:/Users/grupo/Projetos/contato-hardware-3/scripts/performscripts/performance/siac/genesis3.py > asdf 
+Para gerar um arquivo de print dos dados do sensor
+
+
+Configuração das notas do giroscopio
+
+    if((gyro//40) == -3):
+        note = ('G4',notes[0])
+    elif((gyro//40) == -2):
+        note = ('A4',50)
+    elif((gyro//40) == -1):
+        note = ('B4',55)
+    elif((gyro//40) == 0): #se o de cima não for verdade rodar esse
+        note = ('D5', 56)
+  else: #se os de cima não forem verdade esse vai rodar
+        pass
