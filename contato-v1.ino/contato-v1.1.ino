@@ -1,6 +1,6 @@
 
 #include "I2Cdev.h"
-#include "BluetoothSerial.h" //outro bluetooh não seria melhor?
+#include "BluetoothSerial.h"
 
 #include "MPU6050_6Axis_MotionApps20.h"
 
@@ -14,8 +14,8 @@ BluetoothSerial SerialBT;
 
 
 #define INTERRUPT_PIN 2  // use pin 2 on Arduino Uno & most boards
-#define LED_PIN 13 // (Arduino is 13, Teensy is 11, Teensy++ is 6)
-bool blinkState = false; //O que é blinkState? 
+#define LED_PIN 13 
+
 
 // MPU control/status vars
 bool dmpReady = false;  // set true if DMP init was successful
@@ -34,11 +34,12 @@ VectorFloat gravity;    // [x, y, z]            gravity vector
 float euler[3];         // [psi, theta, phi]    Euler angle container
 float ypr[3];           // [yaw, pitch, roll]   yaw/pitch/roll container and gravity vector
 float ypr_mod = 0;
-int mediaAccel;
+// Vars do acionador
 int pressed = 0;
+int mediaAccel = 0;
+int referenciaAcionador = 0;
 
-
-volatile bool mpuInterrupt = false;     // indicates whether MPU interrupt pin has gone high
+volatile bool mpuInterrupt = false;     
 void dmpDataReady() {
     mpuInterrupt = true;
 }
@@ -50,23 +51,17 @@ void dmpDataReady() {
 // ================================================================
 
 void setup() {
-    // join I2C bus (I2Cdev library doesn't do this automatically)
     #if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
         Wire.begin();
-        Wire.setClock(400000); // 400kHz I2C clock. Comment this line if having compilation difficulties
+        Wire.setClock(400000); 
     #elif I2CDEV_IMPLEMENTATION == I2CDEV_BUILTIN_FASTWIRE
         Fastwire::setup(400, true);
     #endif
-
-    // initialize serial communication
-    // (115200 chosen because it is required for Teapot Demo output, but it's
-    // really up to you depending on your project)
+    referenciaAcionador = calibraAcionador();
+ 
     SerialBT.begin("SIAC-Red");
     Serial.begin(115200);
-    while (!Serial); // wait for Leonardo enumeration, others continue immediately
-
     
-    // initialize device
     Serial.println(F("Initializing I2C devices..."));
     mpu.initialize();
     pinMode(INTERRUPT_PIN, INPUT);
@@ -92,22 +87,12 @@ void setup() {
         mpu.CalibrateAccel(6);
         mpu.CalibrateGyro(6); //porque é 6?
         mpu.PrintActiveOffsets();
-        // turn on the DMP, now that it's ready
         Serial.println(F("Enabling DMP..."));
         mpu.setDMPEnabled(true);
 
-      /*
-        Serial.print(F("Enabling interrupt detection (Arduino external interrupt "));
-        Serial.print(digitalPinToInterrupt(INTERRUPT_PIN));
-        Serial.println(F(")..."));
-        attachInterrupt(digitalPinToInterrupt(INTERRUPT_PIN), dmpDataReady, RISING);
-        mpuIntStatus = mpu.getIntStatus();
-       */
-        // set our DMP Ready flag so the main loop() function knows it's okay to use it
         Serial.println(F("DMP ready! Waiting for first interrupt..."));
         dmpReady = true;
 
-        // get expected DMP packet size for later comparison
         packetSize = mpu.dmpGetFIFOPacketSize();
     } else {
         // 1 = initial memory load failed
@@ -123,22 +108,7 @@ void setup() {
 
 void loop() {
     if (!dmpReady) return;
-    // read a packet from FIFO
-    if (mpu.dmpGetCurrentFIFOPacket(fifoBuffer)) { // Get the Latest packet 
-       
-        #ifdef OUTPUT_READABLE_EULER
-            // display Euler angles in degrees
-            mpu.dmpGetQuaternion(&q, fifoBuffer);
-            mpu.dmpGetEuler(euler, &q);
-            Serial.print("euler\t");
-            Serial.print(euler[0] * 180/M_PI);
-            Serial.print("\t");
-            Serial.print(euler[1] * 180/M_PI);
-            Serial.print("\t");
-            Serial.println(euler[2] * 180/M_PI);
-        #endif
-
-       
+    if (mpu.dmpGetCurrentFIFOPacket(fifoBuffer)) { 
           mpu.dmpGetQuaternion(&q, fifoBuffer);
           mpu.dmpGetAccel(&aa, fifoBuffer);
           mpu.dmpGetGravity(&gravity, &q);
@@ -151,6 +121,7 @@ void loop() {
     }
     pressed = average();
     SerialBT.println("01/" + String(ypr_mod)+'/'+String(mediaAccel)+'/'+String(pressed));
+    //Print na serial para debug
     Serial.println("01/" + String(ypr_mod)+'/'+String(mediaAccel)+'/'+String(pressed));
 }
 
@@ -158,20 +129,24 @@ int average()
 {
   int media = 0;
   mediaAccel = 0;
-  for(int i=0; i< 10; i++)
+  for(int i=0; i < 10; i++)
   {
     media += touchRead(T3);
     mediaAccel += aaReal.z;
   }
   media =  media/10;
   mediaAccel = mediaAccel/10;
-  if(media < 70)
-  {
-    return 1;
-  }
-  else
-  {
-    return 0;
-  }
+
+  return media < referenciaAcionador ? 1:0;
   
+}
+
+int calibraAcionador()
+{
+  int media;
+  for(int i=0; i < 20; i++)
+  {
+    media += touchRead(T3);
+  }
+  return (int) media/20;
 }
