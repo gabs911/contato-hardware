@@ -20,7 +20,7 @@ serialString = ''
 
 midiout = rtmidi.MidiOut()
 print(midiout.get_ports())
-port = midiout.open_port(1)
+port = midiout.open_port(2)
 
 #Sensor variables
 gyro = 0
