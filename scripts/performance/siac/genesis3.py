@@ -26,7 +26,7 @@ touch = 0
 #variables
 note = (0,'a')
 last_note = 32
-notes = [48,50,55,56]
+notes = [48,49,55,56]
 notes_delay = [0] * len(notes)
 lastDebounceTime = 0  
 debounceDelay = 0.1
@@ -64,13 +64,13 @@ while(1):
         touch = float(sensorData[3])
         print('gyro:', gyro, 'acc:', accel, 't:', touch)
     
-    if((gyro//40) == -3):
+    if((gyro//40) == 0):
         note = ('G4',notes[0])
-    elif((gyro//40) == -2):
-        note = ('A4',50)
     elif((gyro//40) == -1):
+        note = ('A4',49)
+    elif((gyro//40) == -2):
         note = ('B4',55)
-    elif((gyro//40) == 0): #se o de cima não for verdade rodar esse
+    elif((gyro//40) == -3): #se o de cima não for verdade rodar esse
         note = ('D5', 56)
     else: #se os de cima não forem verdade esse vai rodar
         pass
