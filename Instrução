@@ -7,13 +7,17 @@ Para gerar um arquivo de print dos dados do sensor
 
 Configuração das notas do giroscopio
 
-    if((gyro//40) == -3):
+    #if((gyro//40) == -3):
         note = ('G4',notes[0])
-    elif((gyro//40) == -2):
+    #elif((gyro//40) == -2):
         note = ('A4',50)
-    elif((gyro//40) == -1):
+    #elif((gyro//40) == -1):
         note = ('B4',55)
-    elif((gyro//40) == 0): #se o de cima não for verdade rodar esse
+    #elif((gyro//40) == 0): #se o de cima não for verdade rodar esse
         note = ('D5', 56)
-  else: #se os de cima não forem verdade esse vai rodar
-        pass
+  #else: #se os de cima não forem verdade esse vai rodar
+        #pass
+
+
+
+Em caso de travamento do loopmidi deletar a porta e refazer
