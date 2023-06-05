@@ -165,7 +165,7 @@ int average()
   }
   media =  media/10;
   mediaAccel = mediaAccel/10;
-  if(media < 70)
+  if(media < 40)
   {
     return 1;
   }
