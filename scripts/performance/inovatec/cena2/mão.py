@@ -23,7 +23,7 @@ accel = 0
 touch = 0
 
 #variables
-note = (0,'a')
+note = ('a',0)
 last_note = 32
 notes = [67,69,71,74]
 notes_delay = [0] * len(notes)
