@@ -50,20 +50,20 @@ void dmpDataReady() {
 // ================================================================
 
 void setup() {
-    // join I2C bus (I2Cdev library doesn't do this automatically)
+    // join I2C bus (A biblioteca I2Cdev não faz isso automaticamente)
     #if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
         Wire.begin();
-        Wire.setClock(400000); // 400kHz I2C clock. Comment this line if having compilation difficulties
+        Wire.setClock(400000); // 400kHz I2C clock. Comente esta linha se tiver dificuldades de compilação.
     #elif I2CDEV_IMPLEMENTATION == I2CDEV_BUILTIN_FASTWIRE
         Fastwire::setup(400, true);
     #endif
 
-    // initialize serial communication
+    // inicializar a comunicação serial
     // (115200 chosen because it is required for Teapot Demo output, but it's
     // really up to you depending on your project)
     SerialBT.begin("SIAC-Red");
     Serial.begin(115200);
-    while (!Serial); // wait for Leonardo enumeration, others continue immediately
+    while (!Serial); // aguarde a enumeração de Leonardo, outros continuam imediatamente
 
     
     // initialize device
@@ -158,14 +158,14 @@ int average()
 {
   int media = 0;
   mediaAccel = 0;
-  for(int i=0; i< 60; i++)
+  for(int i=0; i< 20; i++)
   {
     media += touchRead(T3);
     mediaAccel += aaReal.z;
   }
   media =  media/10;
   mediaAccel = mediaAccel/10;
-  if(media < 40)
+  if(media < 20)
   {
     return 1;
   }
@@ -173,5 +173,5 @@ int average()
   {
     return 0;
   }
-  
+
 }
