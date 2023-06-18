@@ -16,7 +16,7 @@ serialString = ''
 
 midiout = rtmidi.MidiOut()
 print(midiout.get_ports())
-port = midiout.open_port(3)
+port = midiout.open_port(1)
 
 #Variaveis do sensor
 gyro = 0
@@ -108,7 +108,7 @@ while(1):
 
     #Mudar o valor para configurar a sensibilidade do acelerometro 
     
-    if(accel > 16000 and (time.time() - previousSoundEffectActiv >= soundeEffectInterval)):
+    if(10000 > accel > 6000 and (time.time() - previousSoundEffectActiv >= soundeEffectInterval)):
         previousSoundEffectActiv = time.time()
         print("ACCEL DETECTED")
         midiout.send_message([0x91,notes[5],120]) #parametro da nota segundo numero do midiout.sed_message
