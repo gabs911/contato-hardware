@@ -1,3 +1,4 @@
+#Usar equipamento do fio vermelho (Xtrondo)
 
 import serial
 import time
@@ -33,7 +34,7 @@ soundEffectDuration = 2
 previousSoundEffect = 3
 soundeEffectInterval = 2
 previousSoundEffectActiv = 0
-angle = 35
+angle = 30
 
 print(notes_delay)
 
