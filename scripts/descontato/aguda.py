@@ -4,10 +4,8 @@ import time
 import rtmidi
 import sys
 
-#Alterar port de acordo com a saída bluetooth do contato
-#Modificação para alternar porta bluetooh fora do scrpt direto ao rodar pelo terminal
 
-contato = 'COM19'
+contato = 'COM22'
 if len(sys.argv) > 1:
     contato = 'COM' + sys.argv[1]
 
@@ -35,7 +33,7 @@ soundEffectDuration = 2
 previousSoundEffect = 3
 soundeEffectInterval = 2
 previousSoundEffectActiv = 0
-angle = 30 #angulo entre uma nota e outra 
+angle = 30 #distancia entre os angulos ((gyro//angle) == -2): 
 
 print(notes_delay)
 
@@ -64,18 +62,17 @@ while(1):
         touch = float(sensorData[3])
         print('gyro:', gyro, 'acc:', accel, 't:', touch) 
     
-    #print(accel)
-    
-    if((gyro//angle) == -2):
-        note = ('C5',notes[4])
-    elif((gyro//angle) == -1):
-        note = ('D5',notes[3])
-    elif((gyro//angle) == 0):
-        note = ('E5',notes[2])
-    elif((gyro//angle) == 1):
-        note = ('F5',notes[1])
-    elif((gyro//angle) == 2):
-        note = ('G5',notes[0])
+    #print(accel)   
+    if(-90 <= gyro <= -55):
+        note = ('a',notes[4])
+    elif(-56 <= gyro <= -21):
+        note = ('a',notes[3])
+    elif(-20 <= gyro <= 15):
+        note = ('a',notes[2])
+    elif(16 <= gyro <= 51):
+        note = ('a',notes[1])
+    elif(52 <= gyro <= 87):
+        note = ('a',notes[0])
  
 
     can = (note == last_note) and (time.time() - lastDebounceTime > 0.1)  

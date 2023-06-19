@@ -65,20 +65,19 @@ while(1):
         print('gyro:', gyro, 'acc:', accel, 't:', touch) 
     
     #print(accel)
-    
-    if((gyro//angle) == -3):
-        note = ('C5',notes[0])
-    elif((gyro//angle) == -2):
-        note = ('D5',notes[1])
-    elif((gyro//angle) == -1):
-        note = ('E5',notes[2])
-    elif((gyro//angle) == 0):
-        note = ('F5',notes[3])
-    elif((gyro//angle) == 1):
-        note = ('G5',notes[4])
-    elif((gyro//angle) == 2):
-        note = ('A5',notes[5])
-    elif((gyro//angle) == 3):
+    if(-90 <= gyro <= -61):
+        note = ('B5',notes[0])
+    elif(-60 <= gyro <= -31):
+        note = ('B5',notes[1])
+    elif(-30 <= gyro <= -16):
+        note = ('B5',notes[2])
+    elif(-15 <= gyro <= 15):
+        note = ('B5',notes[3])
+    elif(16 <= gyro <= 30):
+        note = ('B5',notes[4])
+    elif(31 <= gyro <= 60):
+        note = ('B5',notes[5])
+    elif(61 <= gyro <= 90):
         note = ('B5',notes[6])
   
 

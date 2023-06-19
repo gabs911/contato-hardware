@@ -35,7 +35,7 @@ soundEffectDuration = 2
 previousSoundEffect = 3
 soundeEffectInterval = 2
 previousSoundEffectActiv = 0
-angle = 35
+angle = 35 #distancia entre os angulos ((gyro//angle) == -2):
 
 print(notes_delay)
 
@@ -64,16 +64,18 @@ while(1):
         touch = float(sensorData[3])
         print('gyro:', gyro, 'acc:', accel, 't:', touch)
     
-    if((gyro//angle) == -2):
-        note = ('a',notes[1])
-    elif((gyro//angle) == -1):
-        note = ('a',notes[2])
-    elif((gyro//angle) == 0):
-        note = ('a',notes[3])
-    elif((gyro//angle) == 1):
-        note = ('a',notes[4])
-    elif((gyro//angle) == 2):
-        note = ('a',notes[5])
+    if(-90 <= gyro <= -61):
+        note = ('B5',notes[0])
+    elif(-60 <= gyro <= -31):
+        note = ('B5',notes[1])
+    elif(-30 <= gyro <= -1):
+        note = ('B5',notes[2])
+    elif(0 <= gyro <= 30):
+        note = ('B5',notes[3])
+    elif(31 <= gyro <= 60):
+        note = ('B5',notes[4])
+    elif(61 <= gyro <= 90):
+        note = ('B5',notes[5])
   
 
     can = (note == last_note) and (time.time() - lastDebounceTime > 0.1)

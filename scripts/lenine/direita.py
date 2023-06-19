@@ -6,7 +6,7 @@ import rtmidi
 import sys
 
 
-contato = 'COM19'
+contato = 'COM22'
 if len(sys.argv) > 1:
     contato = 'COM' + sys.argv[1]
 
@@ -34,7 +34,7 @@ soundEffectDuration = 2
 previousSoundEffect = 3
 soundeEffectInterval = 2
 previousSoundEffectActiv = 0
-angle = 45
+angle = 45 #distancia entre os angulos ((gyro//angle) == -2):
 
 print(notes_delay)
 
@@ -62,21 +62,20 @@ while(1):
         accel = float(sensorData[2])
         touch = float(sensorData[3])
         print('gyro:', gyro, 'acc:', accel, 't:', touch)
-    
-    if((gyro//angle) == -2):
+
+    #print(accel)     
+    if(-90 <= gyro <= -45):
         note = ('G4',notes[3])
-    elif((gyro//angle) == -1):
+    elif(-44 <= gyro <= 0):
         note = ('A4',notes[2])
-    elif((gyro//angle) == 0):
+    elif(1 <= gyro <= 45):
         note = ('B4',notes[1])
-    elif((gyro//angle) == 1):
+    elif(46 <= gyro <= 90):
         note = ('D5',notes[0])
   
     
-
     can = (note == last_note) and (time.time() - lastDebounceTime > 0.1)
     
-
     if(touch == 1):
         lastDebounceTime = time.time()
         if(note != last_note):

@@ -33,7 +33,7 @@ soundEffectDuration = 2
 previousSoundEffect = 3
 soundeEffectInterval = 2
 previousSoundEffectActiv = 0
-angle = 45
+angle = 45 #distancia entre os angulos ((gyro//angle) == -2):
 
 print(notes_delay)
 

@@ -7,7 +7,7 @@ import sys
 #Alterar port de acordo com a saída bluetooth do contato
 #Modificação para alternar porta bluetooh fora do scrpt direto ao rodar pelo terminal
 
-contato = 'COM19'
+contato = 'COM22'
 if len(sys.argv) > 1:
     contato = 'COM' + sys.argv[1]
 
@@ -35,7 +35,7 @@ soundEffectDuration = 2
 previousSoundEffect = 3
 soundeEffectInterval = 2
 previousSoundEffectActiv = 0
-angle = 30 #angulo entre uma nota e outra 
+angle = 30 #distancia entre os angulos ((gyro//angle) == -2): 
 
 print(notes_delay)
 
@@ -64,7 +64,6 @@ while(1):
         touch = float(sensorData[3])
         print('gyro:', gyro, 'acc:', accel, 't:', touch) 
     
-    #print(accel)
     if(-90 <= gyro <= -61):
         note = ('B5',notes[0])
     elif(-60 <= gyro <= -31):
@@ -79,7 +78,8 @@ while(1):
         note = ('B5',notes[5])
     elif(61 <= gyro <= 90):
         note = ('B5',notes[6])
-  
+
+
     can = (note == last_note) and (time.time() - lastDebounceTime > 0.1)
     
     if(touch == 1):
