@@ -5,7 +5,7 @@ import rtmidi
 import sys
 
 
-contato = 'COM22'
+contato = 'COM31'
 if len(sys.argv) > 1:
     contato = 'COM' + sys.argv[1]
 
@@ -99,7 +99,7 @@ while(1):
 
     #Mudar o valor para configurar a sensibilidade do acelerometro 
     
-    if(accel > 12000 and (time.time() - previousSoundEffectActiv >= soundeEffectInterval)):
+    if(10000 > accel > 8000 and (time.time() - previousSoundEffectActiv >= soundeEffectInterval)):
         previousSoundEffectActiv = time.time()
         print("ACCEL DETECTED")
         midiout.send_message([0x91,notes[3],120]) #parametro da nota segundo numero do midiout.sed_message

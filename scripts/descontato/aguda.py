@@ -5,7 +5,7 @@ import rtmidi
 import sys
 
 
-contato = 'COM22'
+contato = 'COM31'
 if len(sys.argv) > 1:
     contato = 'COM' + sys.argv[1]
 

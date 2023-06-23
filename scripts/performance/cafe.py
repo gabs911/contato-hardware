@@ -25,7 +25,7 @@ touch = 0
 
 #Variaveis 
 note = ('a',0)
-last_note = 32
+last_note = 0
 notes = [60,62,64,65,67,69,71]
 notes_delay = [0] * len(notes)
 lastDebounceTime = 0  
@@ -70,13 +70,13 @@ while(1):
         note = ('B5',notes[1])
     elif(-38 <= gyro <= -13):
         note = ('B5',notes[2])
-    elif(-12 <= gyro <= 13):
+    elif(-12 <= gyro <= 12):
         note = ('B5',notes[3])
-    elif(14 <= gyro <= 39):
+    elif(13 <= gyro <= 38):
         note = ('B5',notes[4])
-    elif(40 <= gyro <= 65):
+    elif(39 <= gyro <= 64):
         note = ('B5',notes[5])
-    elif(66 <= gyro <= 90):
+    elif(65 <= gyro <= 90):
         note = ('B5',notes[6])
 
 
@@ -111,7 +111,7 @@ while(1):
     if(10000 > accel > 8000 and (time.time() - previousSoundEffectActiv >= soundeEffectInterval)):
         previousSoundEffectActiv = time.time()
         print("ACCEL DETECTED")
-        midiout.send_message([0x91,notes[5],120]) #parametro da nota segundo numero do midiout.sed_message
+        #midiout.send_message([0x91,notes[5],120]) #parametro da nota segundo numero do midiout.sed_message
     
     if(time.time() - previousSoundEffectActiv >= soundEffectDuration):
         previousSoundEffect = time.time()

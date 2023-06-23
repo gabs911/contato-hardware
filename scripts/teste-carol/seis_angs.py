@@ -19,8 +19,12 @@ print(midiout.get_ports())
 port = midiout.open_port(1)
 
 #Variaveis do sensor
-gyro = 0
-accel = 0
+gyro1 = 0
+gyro2 = 0
+gyro3 = 0
+accel1 = 0
+accel2 = 0
+accel3 = 0
 touch = 0
 
 #Variaveis 
@@ -53,30 +57,38 @@ while(1):
         #Leia os dados do buffer até que return/new line seja encontrado
         serialString = serialPort.readline()
 
-        sensorData = (serialString.decode('utf-8')).split('/')
+        sensorData = (serialString.decode('utf-8')).split('/') 
 
         #print(serialString) 
 
         # Print do conteudo do serial data
         id = float(sensorData[0])
-        gyro = float(sensorData[1])
-        accel = float(sensorData[2])
-        touch = float(sensorData[3])
-        print('gyro:', gyro, 'acc:', accel, 't:', touch) 
+        
+        gyro1 = float(sensorData[1])
+        gyro2 = float(sensorData[2])
+        gyro3 = float(sensorData[3])
+
+        accel1 = float(sensorData[4])
+        accel2 = float(sensorData[5])
+        accel3 = float(sensorData[6])
+        
+        touch = float(sensorData[7])
+
+        print('gyro1:', gyro1, 'gyro2:', gyro2, 'gyro3:', gyro3, 'acc1:', accel1, 'acc2:', accel2, 'acc3:', accel3, 't:', touch) 
     
-    if(-90 <= gyro <= -65):
+    if(-90 <= gyro1 <= -65):
         note = ('B5',notes[0])
-    elif(-64 <= gyro <= -39):
+    elif(-64 <= gyro1 <= -39):
         note = ('B5',notes[1])
-    elif(-38 <= gyro <= -13):
+    elif(-38 <= gyro1 <= -13):
         note = ('B5',notes[2])
-    elif(-12 <= gyro <= 13):
+    elif(-12 <= gyro1 <= 13):
         note = ('B5',notes[3])
-    elif(14 <= gyro <= 39):
+    elif(14 <= gyro1 <= 39):
         note = ('B5',notes[4])
-    elif(40 <= gyro <= 65):
+    elif(40 <= gyro1 <= 65):
         note = ('B5',notes[5])
-    elif(66 <= gyro <= 90):
+    elif(66 <= gyro1 <= 90):
         note = ('B5',notes[6])
 
 
@@ -108,7 +120,7 @@ while(1):
 
     #Mudar o valor para configurar a sensibilidade do acelerometro 
     
-    if(10000 > accel > 8000 and (time.time() - previousSoundEffectActiv >= soundeEffectInterval)):
+    if(10000 > accel1 > 8000 and (time.time() - previousSoundEffectActiv >= soundeEffectInterval)):
         previousSoundEffectActiv = time.time()
         print("ACCEL DETECTED")
         midiout.send_message([0x91,notes[5],120]) #parametro da nota segundo numero do midiout.sed_message
