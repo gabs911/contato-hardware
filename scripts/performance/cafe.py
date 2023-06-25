@@ -1,11 +1,7 @@
-
 import serial
 import time
 import rtmidi
 import sys
-
-#Alterar port de acordo com a saída bluetooth do contato
-#Modificação para alternar porta bluetooh fora do scrpt direto ao rodar pelo terminal
 
 contato = 'COM5'
 if len(sys.argv) > 1:
@@ -35,7 +31,7 @@ soundEffectDuration = 2
 previousSoundEffect = 3
 soundeEffectInterval = 2
 previousSoundEffectActiv = 0
-angle = 30 #distancia entre os angulos ((gyro//angle) == -2): 
+angle = 30 
 
 print(notes_delay)
 
@@ -50,14 +46,10 @@ while(1):
     #gyro, accel, touch = getSensorData()
     if(serialPort.in_waiting > 0):
 
-        #Leia os dados do buffer até que return/new line seja encontrado
         serialString = serialPort.readline()
-
         sensorData = (serialString.decode('utf-8')).split('/')
 
         #print(serialString) 
-
-        # Print do conteudo do serial data
         id = float(sensorData[0])
         gyro = float(sensorData[1])
         accel = float(sensorData[2])
@@ -106,14 +98,13 @@ while(1):
                 midiout.send_message([0x80,note[1],100])
                 pass
 
-    #Mudar o valor para configurar a sensibilidade do acelerometro 
     
     if(10000 > accel > 8000 and (time.time() - previousSoundEffectActiv >= soundeEffectInterval)):
         previousSoundEffectActiv = time.time()
         print("ACCEL DETECTED")
-        #midiout.send_message([0x91,notes[5],120]) #parametro da nota segundo numero do midiout.sed_message
+        #midiout.send_message([0x91,notes[5],120])
     
     if(time.time() - previousSoundEffectActiv >= soundEffectDuration):
         previousSoundEffect = time.time()
         #print("ACCEL SOUND EFFECT OFF")
-        midiout.send_message([0x81,notes[5],120]) #nota tem que ta igual nos dois midiout.sed_message do accel
+        midiout.send_message([0x81,notes[5],120])

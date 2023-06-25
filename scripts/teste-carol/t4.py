@@ -4,8 +4,6 @@ import time
 import rtmidi
 import sys
 
-#Alterar port de acordo com a saída bluetooth do contato
-#Modificação para alternar porta bluetooh fora do scrpt direto ao rodar pelo terminal
 
 contato = 'COM5'
 if len(sys.argv) > 1:
