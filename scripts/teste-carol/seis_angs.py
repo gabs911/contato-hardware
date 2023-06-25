@@ -1,22 +1,21 @@
-
 import serial
 import time
 import rtmidi
 import sys
 
-#Alterar port de acordo com a saída bluetooth do contato
-#Modificação para alternar porta bluetooh fora do scrpt direto ao rodar pelo terminal
 
-contato = 'COM31'
+contato = 'COM5'
 if len(sys.argv) > 1:
     contato = 'COM' + sys.argv[1]
+#Modificação para alternar porta bluetooh fora do script direto ao rodar pelo terminal
 
 serialPort = serial.Serial(port = contato, baudrate=115200, bytesize=8, timeout=2, stopbits=serial.STOPBITS_ONE)
 serialString = ''
 
+#imprime a lista de portas MIDI
 midiout = rtmidi.MidiOut()
 print(midiout.get_ports())
-port = midiout.open_port(1)
+port = midiout.open_port(1) #seleciona port MIDI
 
 #Variaveis do sensor
 gyro1 = 0
@@ -58,10 +57,9 @@ while(1):
         serialString = serialPort.readline()
 
         sensorData = (serialString.decode('utf-8')).split('/') 
-
         #print(serialString) 
 
-        # Print do conteudo do serial data
+        #Print do conteudo do serial data
         id = float(sensorData[0])
         
         gyro1 = float(sensorData[1])

@@ -7,7 +7,7 @@ import sys
 #Alterar port de acordo com a saída bluetooth do contato
 #Modificação para alternar porta bluetooh fora do scrpt direto ao rodar pelo terminal
 
-contato = 'COM31'
+contato = 'COM5'
 if len(sys.argv) > 1:
     contato = 'COM' + sys.argv[1]
 
