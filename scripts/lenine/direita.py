@@ -64,13 +64,13 @@ while(1):
         print('gyro:', gyro, 'acc:', accel, 't:', touch)
 
     #print(accel)     
-    if(-90 <= gyro <= -45):
+    if(-120 <= gyro <= -45):
         note = ('G4',notes[3])
     elif(-44 <= gyro <= 0):
         note = ('A4',notes[2])
     elif(1 <= gyro <= 45):
         note = ('B4',notes[1])
-    elif(46 <= gyro <= 90):
+    elif(46 <= gyro <= 120):
         note = ('D5',notes[0])
   
     
