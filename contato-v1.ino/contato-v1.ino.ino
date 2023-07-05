@@ -1,10 +1,10 @@
 
 #include "I2Cdev.h"
-#include "BluetoothSerial.h" //outro bluetooh não seria melhor?
+#include "BluetoothSerial.h"
 
 #include "MPU6050_6Axis_MotionApps20.h"
 
-#if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE 
+#if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
     #include "Wire.h"
 #endif
 
@@ -15,7 +15,7 @@ BluetoothSerial SerialBT;
 
 #define INTERRUPT_PIN 2  // use pin 2 on Arduino Uno & most boards
 #define LED_PIN 13 // (Arduino is 13, Teensy is 11, Teensy++ is 6)
-bool blinkState = false; //O que é blinkState? 
+bool blinkState = false;
 
 // MPU control/status vars
 bool dmpReady = false;  // set true if DMP init was successful
@@ -50,22 +50,22 @@ void dmpDataReady() {
 // ================================================================
 
 void setup() {
-    // join I2C bus (A biblioteca I2Cdev não faz isso automaticamente)
+    // join I2C bus (I2Cdev library doesn't do this automatically)
     #if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
         Wire.begin();
-        Wire.setClock(400000); // 400kHz I2C clock. Comente esta linha se tiver dificuldades de compilação.
+        Wire.setClock(400000); // 400kHz I2C clock. Comment this line if having compilation difficulties
     #elif I2CDEV_IMPLEMENTATION == I2CDEV_BUILTIN_FASTWIRE
         Fastwire::setup(400, true);
     #endif
 
-    // inicializar a comunicação serial
+    // initialize serial communication
     // (115200 chosen because it is required for Teapot Demo output, but it's
     // really up to you depending on your project)
-    SerialBT.begin("SIAC-Red");
+    SerialBT.begin("contato-teste");
     Serial.begin(115200);
-    while (!Serial); // aguarde a enumeração de Leonardo, outros continuam imediatamente
+    while (!Serial); // wait for Leonardo enumeration, others continue immediately
 
-    
+
     // initialize device
     Serial.println(F("Initializing I2C devices..."));
     mpu.initialize();
@@ -90,7 +90,7 @@ void setup() {
     if (devStatus == 0) {
         // Calibration Time: generate offsets and calibrate our MPU6050
         mpu.CalibrateAccel(6);
-        mpu.CalibrateGyro(6); //porque é 6?
+        mpu.CalibrateGyro(6);
         mpu.PrintActiveOffsets();
         // turn on the DMP, now that it's ready
         Serial.println(F("Enabling DMP..."));
@@ -125,7 +125,7 @@ void loop() {
     if (!dmpReady) return;
     // read a packet from FIFO
     if (mpu.dmpGetCurrentFIFOPacket(fifoBuffer)) { // Get the Latest packet 
-       
+
         #ifdef OUTPUT_READABLE_EULER
             // display Euler angles in degrees
             mpu.dmpGetQuaternion(&q, fifoBuffer);
@@ -138,23 +138,22 @@ void loop() {
             Serial.println(euler[2] * 180/M_PI);
         #endif
 
-       
           mpu.dmpGetQuaternion(&q, fifoBuffer);
           mpu.dmpGetAccel(&aa, fifoBuffer);
           mpu.dmpGetGravity(&gravity, &q);
           mpu.dmpGetLinearAccel(&aaReal, &aa, &gravity);
           mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);
 
-  
+
         ypr_mod = ypr[2] * 180/M_PI;
 
     }
-    pressed = average();
+    pressed = touchRead();
     SerialBT.println("01/" + String(ypr_mod)+'/'+String(mediaAccel)+'/'+String(pressed));
     Serial.println("01/" + String(ypr_mod)+'/'+String(mediaAccel)+'/'+String(pressed));
 }
 
-int average()
+int touchRead()
 {
   int media = 0;
   mediaAccel = 0;
@@ -162,9 +161,12 @@ int average()
   {
     media += touchRead(T3);
     mediaAccel += aaReal.z;
+
   }
   media =  media/10;
   mediaAccel = mediaAccel/10;
+  Serial.println(media);
+  
   if(media < 20)
   {
     return 1;
