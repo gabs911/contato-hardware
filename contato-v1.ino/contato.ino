@@ -1,177 +1,177 @@
 
-# inclui  " I2Cdev.h "
-# inclui  " BluetoothSerial.h "
+#include "I2Cdev.h"
+#include "BluetoothSerial.h"
 
-# inclua  " MPU6050_6Axis_MotionApps20.h "
+#include "MPU6050_6Axis_MotionApps20.h"
 
-# se I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
-    # inclui  " Wire.h "
-#endif _
+#if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
+    #include "Wire.h"
+#endif
 
 
 MPU6050 mpu;
 BluetoothSerial SerialBT;
 
 
-# define  INTERRUPT_PIN  2   // usa o pino 2 no Arduino Uno e na maioria das placas
-# define  LED_PIN  13  // (Arduino é 13, Teensy é 11, Teensy++ é 6)
-bool blinkState = false ;
+#define INTERRUPT_PIN 2  // use pin 2 on Arduino Uno & most boards
+#define LED_PIN 13 // (Arduino is 13, Teensy is 11, Teensy++ is 6)
+bool blinkState = false;
 
 // MPU control/status vars
-bool dmpReady = false ;  // define true se a inicialização do DMP foi bem-sucedida
-uint8_t mpuIntStatus;   // mantém o byte de status de interrupção real do MPU
-uint8_t devStatus;      // retorna o status após cada operação do dispositivo (0 = sucesso, !0 = erro)
-uint16_t tamanho do pacote;    // tamanho esperado do pacote DMP (o padrão é 42 bytes)
-uint16_t fifoCount;     // contagem de todos os bytes atualmente em FIFO
-uint8_t fifoBuffer[ 64 ]; // buffer de armazenamento FIFO
+bool dmpReady = false;  // set true if DMP init was successful
+uint8_t mpuIntStatus;   // holds actual interrupt status byte from MPU
+uint8_t devStatus;      // return status after each device operation (0 = success, !0 = error)
+uint16_t packetSize;    // expected DMP packet size (default is 42 bytes)
+uint16_t fifoCount;     // count of all bytes currently in FIFO
+uint8_t fifoBuffer[64]; // FIFO storage buffer
 
-// variáveis ​​de orientação/movimento
-Quatérnio q;           // [w, x, y, z] recipiente de quaternion
-VectorInt16 aa;         // [x, y, z] acelera as medições do sensor
-VectorInt16 aaReal;     // [x, y, z] medições do sensor de aceleração sem gravidade
-VectorInt16 aaMundo;    // [x, y, z] medições do sensor de aceleração de quadro mundial
-VectorFluat gravidade;    // [x, y, z] vetor gravidade
-flutuar euler[ 3 ];         // [psi, theta, phi] Contêiner do ângulo de Euler
-flutuar ypr[ 3 ];           // [yaw, pitch, roll] guinada/pitch/roll contêiner e vetor de gravidade
-float ypr_mod = 0 ;
+// orientation/motion vars
+Quaternion q;           // [w, x, y, z]         quaternion container
+VectorInt16 aa;         // [x, y, z]            accel sensor measurements
+VectorInt16 aaReal;     // [x, y, z]            gravity-free accel sensor measurements
+VectorInt16 aaWorld;    // [x, y, z]            world-frame accel sensor measurements
+VectorFloat gravity;    // [x, y, z]            gravity vector
+float euler[3];         // [psi, theta, phi]    Euler angle container
+float ypr[3];           // [yaw, pitch, roll]   yaw/pitch/roll container and gravity vector
+float ypr_mod = 0;
 int mediaAccel;
-int pressionado = 0 ;
+int pressed = 0;
 
 
-volátil  bool mpuInterrupt = false ;     // indica se o pino de interrupção do MPU está alto
-void  dmpDataReady () {
-    mpuInterrupção = verdadeiro ;
+volatile bool mpuInterrupt = false;     // indicates whether MPU interrupt pin has gone high
+void dmpDataReady() {
+    mpuInterrupt = true;
 }
 
 
 
-// ================================================ ================
-// === CONFIGURAÇÃO INICIAL ===
-// ================================================ ================
+// ================================================================
+// ===                      INITIAL SETUP                       ===
+// ================================================================
 
- configuração nula () {
-    // junta-se ao barramento I2C (a biblioteca I2Cdev não faz isso automaticamente)
-    # se I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
-        Arame. começar ();
-        Arame. setClock ( 400000 ); // Relógio I2C de 400kHz. Comente esta linha se tiver dificuldades de compilação
+void setup() {
+    // join I2C bus (I2Cdev library doesn't do this automatically)
+    #if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
+        Wire.begin();
+        Wire.setClock(400000); // 400kHz I2C clock. Comment this line if having compilation difficulties
     #elif I2CDEV_IMPLEMENTATION == I2CDEV_BUILTIN_FASTWIRE
-        Fastwire::setup ( 400 , verdadeiro );
-    #endif _
+        Fastwire::setup(400, true);
+    #endif
 
-    // inicializa a comunicação serial
-    // (115200 escolhido porque é necessário para a saída Teapot Demo, mas é
-    // realmente depende de você, dependendo do seu projeto)
-    SerialBT. begin ( " Contato-Performance - SIAC 1 " );
-    Serial. começar ( 115200 );
-    enquanto (!Serial); // espera a enumeração do Leonardo, os outros continuam imediatamente
-
-
-    // inicializa o dispositivo
-    Serial. println ( F ( " Inicializando dispositivos I2C... " ));
-    mpu. inicializar ();
-    pinMode (INTERRUPT_PIN, INPUT);
-
-    // verifica a conexão
-    Serial. println ( F ( " Testando conexões de dispositivos... " ));
-    Serial. println (mpu. testConnection () ? F ( " Conexão MPU6050 bem-sucedida " ): F ( " Falha na conexão MPU6050 " ));
+    // initialize serial communication
+    // (115200 chosen because it is required for Teapot Demo output, but it's
+    // really up to you depending on your project)
+    SerialBT.begin("Contato-Performance - SIAC 1");
+    Serial.begin(115200);
+    while (!Serial); // wait for Leonardo enumeration, others continue immediately
 
 
-    // carrega e configura o DMP
-    Serial. println ( F ( " Inicializando DMP... " ));
-    devStatus = mpu. dmpInitialize ();
+    // initialize device
+    Serial.println(F("Initializing I2C devices..."));
+    mpu.initialize();
+    pinMode(INTERRUPT_PIN, INPUT);
 
-    // forneça seus próprios deslocamentos de giroscópio aqui, dimensionados para sensibilidade mínima
-    mpu. setXGyroOffset ( 220 );
-    mpu. setYGyroOffset ( 76 );
-    mpu. setZGyroOffset (-85 ) ;
-    mpu. setZAccelOffset ( 1788 ); // 1688 padrão de fábrica para meu chip de teste
+    // verify connection
+    Serial.println(F("Testing device connections..."));
+    Serial.println(mpu.testConnection() ? F("MPU6050 connection successful") : F("MPU6050 connection failed"));
 
-    // certifique-se de que funcionou (retorna 0 em caso afirmativo)
-    if (devStatus == 0 ) {
-        // Calibration Time: gere offsets e calibre nosso MPU6050
-        mpu. CalibrateAccel ( 6 );
-        mpu. CalibrateGyro ( 6 );
-        mpu. ImprimirDeslocamentosAtivos ();
-        // liga o DMP, agora que está pronto
-        Serial. println ( F ( " Habilitando DMP... " ));
-        mpu. setDMPEnabled ( verdadeiro );
+
+    // load and configure the DMP
+    Serial.println(F("Initializing DMP..."));
+    devStatus = mpu.dmpInitialize();
+
+    // supply your own gyro offsets here, scaled for min sensitivity
+    mpu.setXGyroOffset(220);
+    mpu.setYGyroOffset(76);
+    mpu.setZGyroOffset(-85);
+    mpu.setZAccelOffset(1788); // 1688 factory default for my test chip
+
+    // make sure it worked (returns 0 if so)
+    if (devStatus == 0) {
+        // Calibration Time: generate offsets and calibrate our MPU6050
+        mpu.CalibrateAccel(6);
+        mpu.CalibrateGyro(6);
+        mpu.PrintActiveOffsets();
+        // turn on the DMP, now that it's ready
+        Serial.println(F("Enabling DMP..."));
+        mpu.setDMPEnabled(true);
 
       /*
-        Serial.print(F("Habilitando detecção de interrupção (interrupção externa do Arduino "));
+        Serial.print(F("Enabling interrupt detection (Arduino external interrupt "));
         Serial.print(digitalPinToInterrupt(INTERRUPT_PIN));
         Serial.println(F(")..."));
         attachInterrupt(digitalPinToInterrupt(INTERRUPT_PIN), dmpDataReady, RISING);
         mpuIntStatus = mpu.getIntStatus();
        */
-        // define nosso sinalizador DMP Ready para que a função loop() principal saiba que não há problema em usá-lo
-        Serial. println ( F ( " DMP pronto! Aguardando a primeira interrupção... " ));
-        dmpReady = verdadeiro ;
+        // set our DMP Ready flag so the main loop() function knows it's okay to use it
+        Serial.println(F("DMP ready! Waiting for first interrupt..."));
+        dmpReady = true;
 
-        // obtém o tamanho esperado do pacote DMP para comparação posterior
-        tamanho do pacote = mpu. dmpGetFIFOPacketSize ();
-    } senão {
-        // 1 = falha no carregamento inicial da memória
-        // 2 = Falha nas atualizações de configuração DMP
-        // (se for quebrar, geralmente o código será 1)
-        Serial. print ( F ( " Falha na inicialização do DMP (código " ));
-        Serial. imprimir (devStatus);
-        Serial. println ( F ( " ) " ));
+        // get expected DMP packet size for later comparison
+        packetSize = mpu.dmpGetFIFOPacketSize();
+    } else {
+        // 1 = initial memory load failed
+        // 2 = DMP configuration updates failed
+        // (if it's going to break, usually the code will be 1)
+        Serial.print(F("DMP Initialization failed (code "));
+        Serial.print(devStatus);
+        Serial.println(F(")"));
     }
 }
 
 
 
- laço vazio () {
-    if (!dmpReady) return ;
-    // lê um pacote de FIFO
-    if (mpu. dmpGetCurrentFIFOPacket (fifoBuffer)) { // Obtém o pacote mais recente
+void loop() {
+    if (!dmpReady) return;
+    // read a packet from FIFO
+    if (mpu.dmpGetCurrentFIFOPacket(fifoBuffer)) { // Get the Latest packet 
 
-        # ifdef OUTPUT_READABLE_EULER
-            // exibe os ângulos de Euler em graus
-            mpu. dmpGetQuaternion (&q, fifoBuffer);
-            mpu. dmpGetEuler (euler, &q);
-            Serial. print ( " euler \t " );
-            Serial. imprimir (euler[ 0 ] * 180 /M_PI);
-            Serial. imprima ( " \t " );
-            Serial. imprimir (euler[ 1 ] * 180 /M_PI);
-            Serial. imprima ( " \t " );
-            Serial. println (euler[ 2 ] * 180 /M_PI);
-        #endif _
-
-
-          mpu. dmpGetQuaternion (&q, fifoBuffer);
-          mpu. dmpGetGravity (&gravidade, &q);
-          mpu. dmpGetYawPitchRoll (ypr, &q, &gravidade);
+        #ifdef OUTPUT_READABLE_EULER
+            // display Euler angles in degrees
+            mpu.dmpGetQuaternion(&q, fifoBuffer);
+            mpu.dmpGetEuler(euler, &q);
+            Serial.print("euler\t");
+            Serial.print(euler[0] * 180/M_PI);
+            Serial.print("\t");
+            Serial.print(euler[1] * 180/M_PI);
+            Serial.print("\t");
+            Serial.println(euler[2] * 180/M_PI);
+        #endif
 
 
-        ypr_mod = ypr[ 2 ] * 180 /M_PI;
+          mpu.dmpGetQuaternion(&q, fifoBuffer);
+          mpu.dmpGetGravity(&gravity, &q);
+          mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);
+
+
+        ypr_mod = ypr[2] * 180/M_PI;
 
     }
-    pressionado = touchRead ();
-    SerialBT. println ( " 01/ " + String (ypr_mod)+ ' / ' + String (mediaAccel)+ ' / ' + String (pressionado));
-    Serial. println ( " 01/ " + String (ypr_mod)+ ' / ' + String (mediaAccel)+ ' / ' + String (pressionado));
+    pressed = touchRead();
+    SerialBT.println("01/" + String(ypr_mod)+'/'+String(mediaAccel)+'/'+String(pressed));
+    Serial.println("01/" + String(ypr_mod)+'/'+String(mediaAccel)+'/'+String(pressed));
 }
 
-int  touchRead ()
+int touchRead()
 {
-  int mídia = 0 ;
-  mediaAccel = 0 ;
-  for ( int i= 0 ; i< 10 ; i++)
+  int media = 0;
+  mediaAccel = 0;
+  for(int i=0; i< 10; i++)
   {
-    mídia += touchRead (T3);
-    mediaAccel += aaReal. z ;
+    media += touchRead(T3);
+    mediaAccel += aaReal.z;
 
   }
-  mídia = mídia/ 100 ;
-  mediaAccel = mediaAccel/ 100 ;
+  media =  media/100;
+  mediaAccel = mediaAccel/100;
 
-  se (média > 60 )
+  if(media > 60)
   {
-    retornar  1 ;
+    return 1;
   }
-  outro
+  else
   {
-    retorna  0 ;
+    return 0;
   }
 
 }
