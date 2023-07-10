@@ -50,6 +50,7 @@ while(1):
         
         serialString = serialPort.readline()
         sensorData = (serialString.decode('utf-8')).split('/')
+        #print(serialString) 
 
         id = float(sensorData[0])
         gyro = float(sensorData[1])

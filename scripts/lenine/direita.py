@@ -1,4 +1,3 @@
-#Usar equipamento do fio verde (mod32afonso)
 
 import serial
 import time
@@ -34,7 +33,6 @@ soundEffectDuration = 2
 previousSoundEffect = 3
 soundeEffectInterval = 2
 previousSoundEffectActiv = 0
-angle = 45 #distancia entre os angulos ((gyro//angle) == -2):
 
 print(notes_delay)
 
@@ -49,21 +47,16 @@ while(1):
     #gyro, accel, touch = getSensorData()
     if(serialPort.in_waiting > 0):
 
-        # Read data out of the buffer until a carraige return / new line is found
         serialString = serialPort.readline()
-
         sensorData = (serialString.decode('utf-8')).split('/')
 
-        #print(serialString)
-
-        # Print the contents of the serial data
         id = float(sensorData[0])
         gyro = float(sensorData[1])
         accel = float(sensorData[2])
         touch = float(sensorData[3])
         print('gyro:', gyro, 'acc:', accel, 't:', touch)
 
-    #print(accel)     
+
     if(-120 <= gyro <= -45):
         note = ('G4',notes[3])
     elif(-44 <= gyro <= 0):
@@ -99,16 +92,3 @@ while(1):
             elif(touch !=1):
                 midiout.send_message([0x80,note[1],100])
                 pass
-
-    #Mudar o valor para configurar a sensibilidade do acelerometro 
-    
-    if(accel > 8000 and (time.time() - previousSoundEffectActiv >= soundeEffectInterval)):
-        previousSoundEffectActiv = time.time()
-        print("ACCEL DETECTED")
-        #midiout.send_message([0x91,33,120]) #parametro da nota segundo numero do midiout.sed_message
-    
-    if(time.time() - previousSoundEffectActiv >= soundEffectDuration):
-        previousSoundEffect = time.time()
-        #print("ACCEL SOUND EFFECT OFF")
-
-        #midiout.send_message([0x81,33,120]) #nota tem que ta igual nos dois midiout.sed_message do accel

@@ -35,7 +35,6 @@ soundEffectDuration = 2
 previousSoundEffect = 3
 soundeEffectInterval = 2
 previousSoundEffectActiv = 0
-angle = 30 #distancia entre os angulos ((gyro//angle) == -2): 
 
 print(notes_delay)
 
@@ -106,7 +105,17 @@ while(1):
 
     #Mudar o valor para configurar a sensibilidade do acelerometro 
     
-    if(10000 > accel > 8000 and (time.time() - previousSoundEffectActiv >= soundeEffectInterval)):
+    if(6000 > accel > 4000 and (time.time() - previousSoundEffectActiv >= soundeEffectInterval)):
+        previousSoundEffectActiv = time.time()
+        print("ACCEL DETECTED")
+        midiout.send_message([0x91,notes[5],120]) #parametro da nota segundo numero do midiout.sed_message
+    
+    if(time.time() - previousSoundEffectActiv >= soundEffectDuration):
+        previousSoundEffect = time.time()
+        #print("ACCEL SOUND EFFECT OFF")
+        midiout.send_message([0x81,notes[5],120]) #nota tem que ta igual nos dois midiout.sed_message do accel
+    
+    if(-6000 > accel > -4000 and (time.time() - previousSoundEffectActiv >= soundeEffectInterval)):
         previousSoundEffectActiv = time.time()
         print("ACCEL DETECTED")
         midiout.send_message([0x91,notes[5],120]) #parametro da nota segundo numero do midiout.sed_message

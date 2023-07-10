@@ -1,4 +1,3 @@
-
 import serial
 import time
 import rtmidi
@@ -48,7 +47,6 @@ while(1):
     if(serialPort.in_waiting > 0):
         serialString = serialPort.readline()
         sensorData = (serialString.decode('utf-8')).split('/')
-        #print(serialString) 
 
         # Print do conteudo do serial data
         id = float(sensorData[0])
@@ -56,8 +54,7 @@ while(1):
         accel = float(sensorData[2])
         touch = float(sensorData[3])
         print('gyro:', gyro, 'acc:', accel, 't:', touch) 
-    
-    #print(accel)   
+     
     if(-120 <= gyro <= -55):
         note = ('a',notes[4])
     elif(-56 <= gyro <= -21):
