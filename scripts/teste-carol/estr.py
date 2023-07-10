@@ -1,20 +1,22 @@
-
+#bibliotecas 
 import serial
 import time
 import rtmidi
 import sys
-
+ 
 
 contato = 'COM5'
 if len(sys.argv) > 1:
     contato = 'COM' + sys.argv[1]
+#Modificação para alternar porta bluetooh fora do script direto ao rodar pelo terminal
 
 serialPort = serial.Serial(port = contato, baudrate=115200, bytesize=8, timeout=2, stopbits=serial.STOPBITS_ONE)
 serialString = ''
 
+#imprime a lista de portas MIDI 
 midiout = rtmidi.MidiOut()
 print(midiout.get_ports())
-port = midiout.open_port(2)
+port = midiout.open_port(1) #seleciona port MIDI
 
 #Variaveis do sensor
 gyro = 0
@@ -24,7 +26,7 @@ touch = 0
 #Variaveis 
 note = ('a',0)
 last_note = 0
-notes = [50,53,54,72]
+notes = [60,62,64,65,67,69,71]
 notes_delay = [0] * len(notes)
 lastDebounceTime = 0  
 debounceDelay = 0.1
@@ -33,7 +35,7 @@ soundEffectDuration = 2
 previousSoundEffect = 3
 soundeEffectInterval = 2
 previousSoundEffectActiv = 0
-
+angle = 30 #distancia entre os angulos ((gyro//angle) == -2): 
 
 print(notes_delay)
 
@@ -47,27 +49,37 @@ while(1):
 
     #gyro, accel, touch = getSensorData()
     if(serialPort.in_waiting > 0):
-        
-        serialString = serialPort.readline()
+
+        #Leia os dados do buffer até que return/new line seja encontrado
+        serialString = serialPort.readline() 
         sensorData = (serialString.decode('utf-8')).split('/')
         #print(serialString) 
 
+        #Print do conteudo do serial data
         id = float(sensorData[0])
         gyro = float(sensorData[1])
         accel = float(sensorData[2])
         touch = float(sensorData[3])
         print('gyro:', gyro, 'acc:', accel, 't:', touch) 
- 
-    if(-120 <= gyro <= -30):
-        note = ('C5',notes[2])
-    elif(-31 <= gyro <= 29):
-        note = ('D5',notes[1])
-    elif(30 <= gyro <= 120):
-        note = ('E5',notes[0])
+    
+    if(-90 <= gyro <= -65):
+        note = ('B5',notes[0])
+    elif(-64 <= gyro <= -39):
+        note = ('B5',notes[1])
+    elif(-38 <= gyro <= -13):
+        note = ('B5',notes[2])
+    elif(-12 <= gyro <= 13):
+        note = ('B5',notes[3])
+    elif(14 <= gyro <= 39):
+        note = ('B5',notes[4])
+    elif(40 <= gyro <= 65):
+        note = ('B5',notes[5])
+    elif(66 <= gyro <= 90):
+        note = ('B5',notes[6])
 
 
-    can = (note == last_note) and (time.time() - lastDebounceTime > 0.1)  
-
+    can = (note == last_note) and (time.time() - lastDebounceTime > 0.1)
+    
     if(touch == 1):
         lastDebounceTime = time.time()
         if(note != last_note):
@@ -92,22 +104,14 @@ while(1):
                 midiout.send_message([0x80,note[1],100])
                 pass
 
+    #Mudar o valor para configurar a sensibilidade do acelerometro 
     
     if(10000 > accel > 8000 and (time.time() - previousSoundEffectActiv >= soundeEffectInterval)):
         previousSoundEffectActiv = time.time()
         print("ACCEL DETECTED")
-        midiout.send_message([0x91,notes[3],120]) 
-    if(time.time() - previousSoundEffectActiv >= soundEffectDuration):
-        previousSoundEffect = time.time()
-        #print("ACCEL SOUND EFFECT OFF")
-        midiout.send_message([0x81,notes[3],120]) 
-
-    if(-10000 > accel > -8000 and (time.time() - previousSoundEffectActiv >= soundeEffectInterval)):
-        previousSoundEffectActiv = time.time()
-        print("ACCEL DETECTED")
-        midiout.send_message([0x91,notes[3],120]) 
+        midiout.send_message([0x91,notes[5],120]) #parametro da nota segundo numero do midiout.sed_message
     
     if(time.time() - previousSoundEffectActiv >= soundEffectDuration):
         previousSoundEffect = time.time()
         #print("ACCEL SOUND EFFECT OFF")
-        midiout.send_message([0x81,notes[3],120]) 
+        midiout.send_message([0x81,notes[5],120]) #nota tem que ta igual nos dois midiout.sed_message do accel

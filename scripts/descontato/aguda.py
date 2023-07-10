@@ -23,7 +23,7 @@ touch = 0
 
 #Variaveis 
 note = ('a',0)
-last_note = 32
+last_note = 0
 notes = [62,63,65,69,70,72]
 notes_delay = [0] * len(notes)
 lastDebounceTime = 0  
@@ -33,7 +33,6 @@ soundEffectDuration = 2
 previousSoundEffect = 3
 soundeEffectInterval = 2
 previousSoundEffectActiv = 0
-angle = 30 #distancia entre os angulos ((gyro//angle) == -2): 
 
 print(notes_delay)
 
@@ -47,12 +46,8 @@ while(1):
 
     #gyro, accel, touch = getSensorData()
     if(serialPort.in_waiting > 0):
-
-        #Leia os dados do buffer até que return/new line seja encontrado
         serialString = serialPort.readline()
-
         sensorData = (serialString.decode('utf-8')).split('/')
-
         #print(serialString) 
 
         # Print do conteudo do serial data
@@ -100,15 +95,4 @@ while(1):
             elif(touch !=1):
                 midiout.send_message([0x80,note[1],100])
                 pass
-
-    #Mudar o valor para configurar a sensibilidade do acelerometro 
-    
-    if(accel > 10000 and (time.time() - previousSoundEffectActiv >= soundeEffectInterval)):
-        previousSoundEffectActiv = time.time()
-        print("ACCEL DETECTED")
-        #midiout.send_message([0x91,notes[5],120]) #parametro da nota segundo numero do midiout.sed_message
-    
-    if(time.time() - previousSoundEffectActiv >= soundEffectDuration):
-        previousSoundEffect = time.time()
-        #print("ACCEL SOUND EFFECT OFF")
-        #midiout.send_message([0x81,notes[5],120]) #nota tem que ta igual nos dois midiout.sed_message do accel
+  

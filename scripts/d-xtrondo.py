@@ -1,5 +1,3 @@
-#Usar equipamento do fio verde (mod32afonso)
-
 import serial
 import time
 import rtmidi
@@ -15,17 +13,17 @@ serialString = ''
 
 midiout = rtmidi.MidiOut()
 print(midiout.get_ports())
-port = midiout.open_port(1)
+port = midiout.open_port(2)
 
-#Sensor variables
+#Variaveis do sensor
 gyro = 0
 accel = 0
 touch = 0
 
-#variables
+#Variaveis 
 note = ('a',0)
 last_note = 0
-notes = [79,81,83,86]
+notes = [33,75,77,80,83]
 notes_delay = [0] * len(notes)
 lastDebounceTime = 0  
 debounceDelay = 0.1
@@ -34,7 +32,7 @@ soundEffectDuration = 2
 previousSoundEffect = 3
 soundeEffectInterval = 2
 previousSoundEffectActiv = 0
-angle = 45 #distancia entre os angulos ((gyro//angle) == -2):
+angle = 30
 
 print(notes_delay)
 
@@ -46,34 +44,29 @@ def assignTimes(note):
 
 while(1):
 
-    #gyro, accel, touch = getSensorData()
     if(serialPort.in_waiting > 0):
 
-        # Read data out of the buffer until a carraige return / new line is found
         serialString = serialPort.readline()
 
         sensorData = (serialString.decode('utf-8')).split('/')
 
-        #print(serialString)
-
-        # Print the contents of the serial data
+        #print(serialString) 
         id = float(sensorData[0])
         gyro = float(sensorData[1])
         accel = float(sensorData[2])
         touch = float(sensorData[3])
-        print('gyro:', gyro, 'acc:', accel, 't:', touch)
-
-    #print(accel)     
-    if(-90 <= gyro <= -45):
-        note = ('G4',notes[3])
-    elif(-44 <= gyro <= 0):
-        note = ('A4',notes[2])
-    elif(1 <= gyro <= 45):
-        note = ('B4',notes[1])
-    elif(46 <= gyro <= 90):
-        note = ('D5',notes[0])
-  
+        print('gyro:', gyro, 'acc:', accel, 't:', touch) 
     
+    if(-120 <= gyro <= -45):
+        note = ('G4',notes[4])
+    elif(-44 <= gyro <= 0):
+        note = ('A4',notes[3])
+    elif(1 <= gyro <= 45):
+        note = ('B4',notes[2])
+    elif(46 <= gyro <= 120):
+        note = ('D5',notes[1])
+
+
     can = (note == last_note) and (time.time() - lastDebounceTime > 0.1)
     
     if(touch == 1):
@@ -100,15 +93,23 @@ while(1):
                 midiout.send_message([0x80,note[1],100])
                 pass
 
-    #Mudar o valor para configurar a sensibilidade do acelerometro 
     
-    if(accel > 8000 and (time.time() - previousSoundEffectActiv >= soundeEffectInterval)):
+    if(5000 > accel > 3000 and (time.time() - previousSoundEffectActiv >= soundeEffectInterval)):
         previousSoundEffectActiv = time.time()
         print("ACCEL DETECTED")
-        #midiout.send_message([0x91,33,120]) #parametro da nota segundo numero do midiout.sed_message
+        midiout.send_message([0x91,notes[0],120]) 
     
     if(time.time() - previousSoundEffectActiv >= soundEffectDuration):
         previousSoundEffect = time.time()
         #print("ACCEL SOUND EFFECT OFF")
-
-        #midiout.send_message([0x81,33,120]) #nota tem que ta igual nos dois midiout.sed_message do accel
+        midiout.send_message([0x81,notes[0],120]) 
+    
+    if(-5000 > accel > -2000 and (time.time() - previousSoundEffectActiv >= soundeEffectInterval)):
+        previousSoundEffectActiv = time.time()
+        print("ACCEL DETECTED")
+        midiout.send_message([0x91,notes[0],120]) 
+    
+    if(time.time() - previousSoundEffectActiv >= soundEffectDuration):
+        previousSoundEffect = time.time()
+        #print("ACCEL SOUND EFFECT OFF")
+        midiout.send_message([0x81,notes[0],120]) 
