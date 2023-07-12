@@ -13,7 +13,7 @@ serialString = ''
 
 midiout = rtmidi.MidiOut()
 print(midiout.get_ports())
-port = midiout.open_port(1)
+port = midiout.open_port(8)
 
 #Variaveis do sensor
 gyro = 0
@@ -92,4 +92,3 @@ while(1):
             elif(touch !=1):
                 midiout.send_message([0x80,note[1],100])
                 pass
-  

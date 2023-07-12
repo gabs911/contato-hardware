@@ -18,15 +18,21 @@ midiout = rtmidi.MidiOut()
 print(midiout.get_ports())
 port = midiout.open_port(1) #seleciona port MIDI
 
-#Variaveis do sensor
-gyro = 0
+#Variaveis do sensor 
+gyro = 0 
 accel = 0
 touch = 0
 
 #Variaveis 
-note = ('a',0)
+notes = { 
+    "C4": 48, "C#4": 49, "D4": 50, "D#4": 51, "E4": 52, "F4": 53, "F#4": 54, "G4": 55, "G#4": 56, "A4": 57, "A#4": 58, "B4": 59,
+    "C5": 60, "C#5": 61, "D5": 62, "D#5": 63, "E5": 64, "F5": 65, "F#5": 66, "G5": 67, "G#5": 68, "A5": 69, "A#5": 70, "B5": 71,
+    "C6": 72, "C#6": 73, "D6": 74, "D#6": 75, "E6": 76, "F6": 77, "F#6": 78, "G6": 79, "G#6": 80, "A6": 81, "A#6": 82, "B6": 83,
+    "C7": 84, "C#7": 85, "D7": 86, "D#7": 87, "E7": 88, "F7": 89, "F#7": 90, "G7": 91, "G#7": 92, "A7": 93, "A#7": 94, "B7": 95
+} 
+note = ([])
 last_note = 0
-notes = [60,62,64,65,67,69,71]
+notes = ["C5","D5","E5","F5","G5","A5","B5"]
 notes_delay = [0] * len(notes)
 lastDebounceTime = 0  
 debounceDelay = 0.1
@@ -62,19 +68,19 @@ while(1):
         print('gyro:', gyro, 'acc:', accel, 't:', touch) 
     
     if(-90 <= gyro <= -65):
-        note = ('B5',notes[0])
+        note = (notes["C5"])
     elif(-64 <= gyro <= -39):
-        note = ('B5',notes[1])
+        note = (notes["D5"])
     elif(-38 <= gyro <= -13):
-        note = ('B5',notes[2])
+        note = (notes["E5"])
     elif(-12 <= gyro <= 13):
-        note = ('B5',notes[3])
+        note = (notes["F5"])
     elif(14 <= gyro <= 39):
-        note = ('B5',notes[4])
+        note = (notes["G5"])
     elif(40 <= gyro <= 65):
-        note = ('B5',notes[5])
+        note = (notes["A5"])
     elif(66 <= gyro <= 90):
-        note = ('B5',notes[6])
+        note = (notes['B5'])
 
 
     can = (note == last_note) and (time.time() - lastDebounceTime > 0.1)
@@ -108,19 +114,14 @@ while(1):
     if(6000 > accel > 4000 and (time.time() - previousSoundEffectActiv >= soundeEffectInterval)):
         previousSoundEffectActiv = time.time()
         print("ACCEL DETECTED")
-        midiout.send_message([0x91,notes[5],120]) #parametro da nota segundo numero do midiout.sed_message
-    
-    if(time.time() - previousSoundEffectActiv >= soundEffectDuration):
-        previousSoundEffect = time.time()
-        #print("ACCEL SOUND EFFECT OFF")
-        midiout.send_message([0x81,notes[5],120]) #nota tem que ta igual nos dois midiout.sed_message do accel
-    
-    if(-6000 > accel > -4000 and (time.time() - previousSoundEffectActiv >= soundeEffectInterval)):
+        midiout.send_message([0x91,notes['B5'],120]) #parametro da nota segundo numero do midiout.sed_message
+        
+    elif(-6000 > accel > -4000 and (time.time() - previousSoundEffectActiv >= soundeEffectInterval)):
         previousSoundEffectActiv = time.time()
         print("ACCEL DETECTED")
-        midiout.send_message([0x91,notes[5],120]) #parametro da nota segundo numero do midiout.sed_message
+        midiout.send_message([0x91,notes['B5'],120]) #parametro da nota segundo numero do midiout.sed_message
     
     if(time.time() - previousSoundEffectActiv >= soundEffectDuration):
         previousSoundEffect = time.time()
         #print("ACCEL SOUND EFFECT OFF")
-        midiout.send_message([0x81,notes[5],120]) #nota tem que ta igual nos dois midiout.sed_message do accel
+        midiout.send_message([0x81,notes['B5'],120]) #nota tem que ta igual nos dois midiout.sed_message do accel
