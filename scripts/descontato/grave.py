@@ -50,6 +50,7 @@ while(1):
         
         serialString = serialPort.readline()
         sensorData = (serialString.decode('utf-8')).split('/')
+        #print(serialString) 
 
         id = float(sensorData[0])
         gyro = float(sensorData[1])
@@ -92,21 +93,22 @@ while(1):
                 pass
 
     
-    if(10000 > accel > 8000 and (time.time() - previousSoundEffectActiv >= soundeEffectInterval)):
+    if(8000 > accel > 6000 and (time.time() - previousSoundEffectActiv >= soundeEffectInterval)):
         previousSoundEffectActiv = time.time()
         print("ACCEL DETECTED")
-        midiout.send_message([0x91,notes[3],120]) 
-    if(time.time() - previousSoundEffectActiv >= soundEffectDuration):
-        previousSoundEffect = time.time()
-        #print("ACCEL SOUND EFFECT OFF")
-        midiout.send_message([0x81,notes[3],120]) 
-
-    if(-10000 > accel > -8000 and (time.time() - previousSoundEffectActiv >= soundeEffectInterval)):
-        previousSoundEffectActiv = time.time()
-        print("ACCEL DETECTED")
-        midiout.send_message([0x91,notes[3],120]) 
+        midiout.send_message([0x91,notes[0],120]) 
     
     if(time.time() - previousSoundEffectActiv >= soundEffectDuration):
         previousSoundEffect = time.time()
         #print("ACCEL SOUND EFFECT OFF")
-        midiout.send_message([0x81,notes[3],120]) 
+        midiout.send_message([0x81,notes[0],120]) 
+    
+    if(-6000 > accel > -8000 and (time.time() - previousSoundEffectActiv >= soundeEffectInterval)):
+        previousSoundEffectActiv = time.time()
+        print("ACCEL DETECTED")
+        midiout.send_message([0x91,notes[0],120]) 
+    
+    if(time.time() - previousSoundEffectActiv >= soundEffectDuration):
+        previousSoundEffect = time.time()
+        #print("ACCEL SOUND EFFECT OFF")
+        midiout.send_message([0x81,notes[0],120]) 

@@ -14,7 +14,7 @@ serialString = ''
 
 midiout = rtmidi.MidiOut()
 print(midiout.get_ports())
-port = midiout.open_port(1)
+port = midiout.open_port(3)
 
 #Sensor variables
 gyro = 0
@@ -47,16 +47,21 @@ while(1):
     #gyro, accel, touch = getSensorData()
     if(serialPort.in_waiting > 0):
 
+        # Read data out of the buffer until a carraige return / new line is found
         serialString = serialPort.readline()
+
         sensorData = (serialString.decode('utf-8')).split('/')
 
+        #print(serialString)
+
+        # Print the contents of the serial data
         id = float(sensorData[0])
         gyro = float(sensorData[1])
         accel = float(sensorData[2])
         touch = float(sensorData[3])
         print('gyro:', gyro, 'acc:', accel, 't:', touch)
 
-
+    #print(accel)     
     if(-120 <= gyro <= -45):
         note = ('G4',notes[3])
     elif(-44 <= gyro <= 0):
