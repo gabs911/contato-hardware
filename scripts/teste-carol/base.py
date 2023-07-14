@@ -101,11 +101,11 @@ while(1):
 
     
     if(10000 > accel > 8000 and (time.time() - previousSoundEffectActiv >= soundeEffectInterval)):
-        previousSoundEffectActiv = time.time()
+        previousSoundEffectActiv = time.time() 
         print("ACCEL DETECTED")
-        midiout.send_message([0x91,notes[5],120]) 
+        midiout.send_message([0x91,notes[5],100]) 
     
     if(time.time() - previousSoundEffectActiv >= soundEffectDuration):
         previousSoundEffect = time.time()
         #print("ACCEL SOUND EFFECT OFF")
-        midiout.send_message([0x81,notes[5],120]) 
+        midiout.send_message([0x81,notes[5],100]) 
