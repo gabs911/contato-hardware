@@ -26,16 +26,12 @@ note = ('a',0)
 last_note = 0
 notes = [33,75,77,80,83]
 notes_delay = [0] * len(notes)
-lastDebounceTime = 0  
-debounceDelay = 0.1
-noteHold = 0.2
+lastDebounceTime = 0.1  
+noteHold = 0.005
 soundEffectDuration = 0.2
 previousSoundEffect = 3
 soundeEffectInterval = 2
-previousSoundEffectActiv = 0
-angle = 30
-
-print(notes_delay)
+previousSoundEffectActiv = 0.1
 
 def assignTimes(note):
     
@@ -91,21 +87,21 @@ while(1):
                 midiout.send_message([0x80,notes[i],50])
                 pass
             elif(touch !=1):
-                midiout.send_message([0x80,note[1],50]) #0x80 desligar a nota, 100 velocidade do MiDi
+                midiout.send_message([0x80,note[1],50]) 
                 pass
 
     
-    if(4000 > accel > 4000 and (time.time() - previousSoundEffectActiv >= soundeEffectInterval)):
+    if(10000 > accel > 8000 and (time.time() - previousSoundEffectActiv >= soundeEffectInterval)):
         previousSoundEffectActiv = time.time()
         print("ACCEL DETECTED")
         midiout.send_message([0x91,notes[0],50])
     
-    elif(-3000 > accel > -6000 and (time.time() - previousSoundEffectActiv >= soundeEffectInterval)):
+    elif(-8000 > accel > -10000 and (time.time() - previousSoundEffectActiv >= soundeEffectInterval)):
         previousSoundEffectActiv = time.time()
         print("ACCEL DETECTED")
         midiout.send_message([0x91,notes[0],50]) 
     
-    if(time.time() - previousSoundEffectActiv >= noteHold):
+    if(time.time() - previousSoundEffectActiv >= soundEffectDuration):
         previousSoundEffect = time.time()
         #print("ACCEL SOUND EFFECT OFF")
         midiout.send_message([0x81,notes[0],50]) 

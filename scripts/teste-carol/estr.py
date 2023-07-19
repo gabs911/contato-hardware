@@ -118,7 +118,7 @@ def assignTimes(note):
                 midiout.send_message([0x80,notes[i],100])
                 pass
             elif(touch !=1):
-                midiout.send_message([0x80,note[1],100])
+                midiout.send_message([0x80,note[1],100]) #0x80 desligar a nota, 100 velocidade do MiDi
                 pass
 
     #Mudar o valor para configurar a sensibilidade do acelerometro 

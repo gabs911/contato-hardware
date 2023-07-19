@@ -28,14 +28,16 @@ note = ('a',0)
 last_note = 0
 notes = [60,62,64,65,67,69,71]
 notes_delay = [0] * len(notes)
-lastDebounceTime = 0  
-debounceDelay = 0.1
-noteHold = 0.2
-soundEffectDuration = 2
-previousSoundEffect = 3
-soundeEffectInterval = 2
-previousSoundEffectActiv = 0
-angle = 30 #distancia entre os angulos ((gyro//angle) == -2): 
+lastDebounceTime = 0.1 #ultimo salto 
+noteHold = 0.3 #tempo para segurar a nota  
+soundEffectDuration = 0.2 #tempo limite para acionamento de disparo, caso for necessario deixar accel com tempo diferente do gyro
+previousSoundEffect = 1 #tempo para acionamento do accel
+soundeEffectInterval = 2 #intervalo entre os acionamentos do accel
+previousSoundEffectActiv = 0.1
+
+#Variaveis antigas:
+    #debounceDelay = 0.1
+    #angle = 30 #distancia entre os angulos ((gyro//angle) == -2): 
 
 print(notes_delay)
 
@@ -86,33 +88,33 @@ while(1):
         if(note != last_note):
             assignTimes(note[1])
             last_note = note
-            midiout.send_message([0x90,note[1],100])
+            midiout.send_message([0x90,note[1],50])
             print("MIDI ON" + str(time.time()))
         else:
             if(can == True):
                 last_note = note
                 assignTimes(note[1])
-                midiout.send_message([0x90,note[1],100])
+                midiout.send_message([0x90,note[1],50])
                 print("MIDI ON"+ str(time.time()))
     
     for i in range(len(notes)):
         if((time.time() - notes_delay[i] > noteHold)):
            #print(f"Off + " + str(note))
             if(notes[i] != note[1]):
-                midiout.send_message([0x80,notes[i],100])
+                midiout.send_message([0x80,notes[i],50])
                 pass
             elif(touch !=1):
-                midiout.send_message([0x80,note[1],100])
+                midiout.send_message([0x80,note[1],50]) #0x80 desligar a nota, 100 velocidade do MiDi
                 pass
 
-    #Mudar o valor para configurar a sensibilidade do acelerometro 
+    #Para mudar a sensibilidade do acelerometro alterar os limites (10000 > accel > 8000)
     
     if(10000 > accel > 8000 and (time.time() - previousSoundEffectActiv >= soundeEffectInterval)):
         previousSoundEffectActiv = time.time()
         print("ACCEL DETECTED")
-        midiout.send_message([0x91,notes[5],120]) #parametro da nota segundo numero do midiout.sed_message
+        midiout.send_message([0x91,notes[5],50]) #parametro da nota segundo numero do midiout.sed_message
     
-    if(time.time() - previousSoundEffectActiv >= soundEffectDuration):
+    if(time.time() - previousSoundEffectActiv >= noteHold): 
         previousSoundEffect = time.time()
         #print("ACCEL SOUND EFFECT OFF")
-        midiout.send_message([0x81,notes[5],120]) #nota tem que ta igual nos dois midiout.sed_message do accel
+        midiout.send_message([0x81,notes[5],50]) #nota tem que ta igual nos dois midiout.sed_message do accel

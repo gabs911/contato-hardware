@@ -26,13 +26,12 @@ note = ('a',0)
 last_note = 0
 notes = [40,41,42,43,44,45]
 notes_delay = [0] * len(notes)
-lastDebounceTime = 0  
-debounceDelay = 0.1
+lastDebounceTime = 0.1
 noteHold = 0.2
 soundEffectDuration = 2
 previousSoundEffect = 3
 soundeEffectInterval = 2
-previousSoundEffectActiv = 0
+previousSoundEffectActiv = 0.1
 
 
 print(notes_delay)

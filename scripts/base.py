@@ -23,18 +23,14 @@ touch = 0
 #Variaveis 
 note = ('a',0)
 last_note = 0
-notes = [24,26,28,29,31,33,35]
+notes = [60,62,64,65,67,69,71]
 notes_delay = [0] * len(notes)
-lastDebounceTime = 0  
-debounceDelay = 0.1
-noteHold = 0.2
-soundEffectDuration = 2
-previousSoundEffect = 3
-soundeEffectInterval = 2
-previousSoundEffectActiv = 0
-angle = 30
-
-print(notes_delay)
+lastDebounceTime = 0.1 
+noteHold = 0.3 
+soundEffectDuration = 0.2 
+previousSoundEffect = 1 
+soundeEffectInterval = 2 
+previousSoundEffectActiv = 0.1
 
 def assignTimes(note):
     
