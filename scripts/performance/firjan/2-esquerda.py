@@ -14,7 +14,7 @@ serialString = ''
 
 midiout = rtmidi.MidiOut()
 print(midiout.get_ports())
-port = midiout.open_port(4)
+port = midiout.open_port(2)
 
 #Sensor variables
 gyro = 0
@@ -81,21 +81,21 @@ while(1):
         if(note != last_note):
             assignTimes(note[1])
             last_note = note
-            midiout.send_message([0x90,note[1],100])
+            midiout.send_message([0x90,note[1],50])
             print("MIDI ON" + str(time.time()))
         else:
             if(can == True):
                 last_note = note
                 assignTimes(note[1])
-                midiout.send_message([0x90,note[1],100])
+                midiout.send_message([0x90,note[1],50])
                 print("MIDI ON"+ str(time.time()))
     
     for i in range(len(notes)):
         if((time.time() - notes_delay[i] > noteHold)):
            #print(f"Off + " + str(note))
             if(notes[i] != note[1]):
-                midiout.send_message([0x80,notes[i],100])
+                midiout.send_message([0x80,notes[i],50])
                 pass
             elif(touch !=1):
-                midiout.send_message([0x80,note[1],100])
+                midiout.send_message([0x80,note[1],50])
                 pass
