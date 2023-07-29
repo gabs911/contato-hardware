@@ -7,15 +7,13 @@ import sys
 contato = 'COM9'
 if len(sys.argv) > 1:
     contato = 'COM' + sys.argv[1]
-#Modificação para alternar porta bluetooh fora do script direto ao rodar pelo terminal
 
 serialPort = serial.Serial(port = contato, baudrate=115200, bytesize=8, timeout=2, stopbits=serial.STOPBITS_ONE)
 serialString = ''
 
-#imprime a lista de portas MIDI
 midiout = rtmidi.MidiOut()
 print(midiout.get_ports())
-port = midiout.open_port(1) #seleciona port MIDI
+port = midiout.open_port(1)
 
 #Variaveis do sensor
 gyro1 = 0
@@ -38,7 +36,7 @@ soundEffectDuration = 2
 previousSoundEffect = 3
 soundeEffectInterval = 2
 previousSoundEffectActiv = 0
-angle = 30 #distancia entre os angulos ((gyro//angle) == -2): 
+
 
 print(notes_delay)
 
@@ -52,14 +50,11 @@ while(1):
 
     #gyro, accel, touch = getSensorData()
     if(serialPort.in_waiting > 0):
-
-        #Leia os dados do buffer até que return/new line seja encontrado
         serialString = serialPort.readline()
 
         sensorData = (serialString.decode('utf-8')).split('/') 
         #print(serialString) 
-
-        #Print do conteudo do serial data
+        
         id = float(sensorData[0])
         
         gyro1 = float(sensorData[1])
@@ -116,14 +111,18 @@ while(1):
                 midiout.send_message([0x80,note[1],100])
                 pass
 
-    #Mudar o valor para configurar a sensibilidade do acelerometro 
     
     if(10000 > accel1 > 8000 and (time.time() - previousSoundEffectActiv >= soundeEffectInterval)):
         previousSoundEffectActiv = time.time()
         print("ACCEL DETECTED")
-        midiout.send_message([0x91,notes[5],120]) #parametro da nota segundo numero do midiout.sed_message
+        midiout.send_message([0x91,notes[5],100])
+
+    elif(-6000 > accel1 > -10000 and (time.time() - previousSoundEffectActiv >= soundeEffectInterval)):
+        previousSoundEffectActiv = time.time()
+        print("ACCEL DETECTED")
+        midiout.send_message([0x91,notes[1],100])
     
     if(time.time() - previousSoundEffectActiv >= soundEffectDuration):
         previousSoundEffect = time.time()
         #print("ACCEL SOUND EFFECT OFF")
-        midiout.send_message([0x81,notes[5],120]) #nota tem que ta igual nos dois midiout.sed_message do accel
+        midiout.send_message([0x81,notes[5],100])

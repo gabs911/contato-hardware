@@ -96,10 +96,15 @@ while(1):
                 pass
 
     
-    if(4000 > accel > 2000 and (time.time() - previousSoundEffectActiv >= soundeEffectInterval)):
+    if(10000 > accel > 6000 and (time.time() - previousSoundEffectActiv >= soundeEffectInterval)):
         previousSoundEffectActiv = time.time()
         print("ACCEL DETECTED")
         midiout.send_message([0x91,notes[5],50]) 
+
+    elif(-6000 > accel > -10000 and (time.time() - previousSoundEffectActiv >= soundeEffectInterval)):
+        previousSoundEffectActiv = time.time()
+        print("ACCEL DETECTED")
+        midiout.send_message([0x91,notes[1],100])
     
     if(time.time() - previousSoundEffectActiv >= noteHold):
         previousSoundEffect = time.time()

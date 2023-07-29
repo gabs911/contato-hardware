@@ -9,12 +9,12 @@ contato = 'COM5'
 if len(sys.argv) > 1:
     contato = 'COM' + sys.argv[1]
 
-serialPort = serial.Serial(port = contato, baudrate=115200, bytesize=8, timeout=2, stopbits=serial.STOPBITS_ONE)
+serialPort = serial.Serial(port = contato, baudrate=115200, bytesize=8, timeout=2, stopbits=serial.STOPBITS_ONE, rtscts=True)
 serialString = ''
 
 midiout = rtmidi.MidiOut()
 print(midiout.get_ports())
-port = midiout.open_port(1)
+port = midiout.open_port(3)
 
 #Sensor variables
 gyro = 0

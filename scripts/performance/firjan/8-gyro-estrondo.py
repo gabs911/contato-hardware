@@ -9,29 +9,30 @@ contato = 'COM5'
 if len(sys.argv) > 1:
     contato = 'COM' + sys.argv[1]
 
-serialPort = serial.Serial(port = contato, baudrate=115200, bytesize=8, timeout=2, stopbits=serial.STOPBITS_ONE)
+serialPort = serial.Serial(port = contato, baudrate=115200, bytesize=8, timeout=2, stopbits=serial.STOPBITS_ONE, rtscts=True)
 serialString = ''
 
 midiout = rtmidi.MidiOut()
 print(midiout.get_ports())
-port = midiout.open_port(2)
+port = midiout.open_port(8)
 
-#Sensor variables
+#Variaveis do sensor
 gyro = 0
 accel = 0
 touch = 0
 
-#variables
+#Variaveis 
 note = ('a',0)
 last_note = 0
-notes = [74,76,77,78,79]
+notes = [51,53,56,59]
 notes_delay = [0] * len(notes)
 lastDebounceTime = 0.1  
-noteHold = 0.2
+noteHold = 0.005
 soundEffectDuration = 2
 previousSoundEffect = 3
 soundeEffectInterval = 2
 previousSoundEffectActiv = 0.1
+
 
 def assignTimes(note):
     
@@ -41,36 +42,29 @@ def assignTimes(note):
 
 while(1):
 
-    #gyro, accel, touch = getSensorData()
     if(serialPort.in_waiting > 0):
 
-        # Read data out of the buffer until a carraige return / new line is found
         serialString = serialPort.readline()
 
         sensorData = (serialString.decode('utf-8')).split('/')
 
-        #print(serialString)
-
-        # Print the contents of the serial data
+        #print(serialString) 
         id = float(sensorData[0])
         gyro = float(sensorData[1])
         accel = float(sensorData[2])
         touch = float(sensorData[3])
-        print('gyro:', gyro, 'acc:', accel, 't:', touch)
-
-    #print(accel)    
-    if(-120 <= gyro <= -55):
-        note = ('a',notes[0])
-    elif(-56 <= gyro <= -21):
-        note = ('a',notes[1])
-    elif(-20 <= gyro <= 15):
-        note = ('a',notes[2])
-    elif(16 <= gyro <= 51):
-        note = ('a',notes[3])
-    elif(52 <= gyro <= 120):
-        note = ('a',notes[4])
-  
+        print('gyro:', gyro, 'acc:', accel, 't:', touch) 
     
+    if(-120 <= gyro <= -45):
+        note = ('G4',notes[0])
+    elif(-44 <= gyro <= 0):
+        note = ('A4',notes[1])
+    elif(1 <= gyro <= 45):
+        note = ('B4',notes[2])
+    elif(46 <= gyro <= 120):
+        note = ('D5',notes[3])
+
+
     can = (note == last_note) and (time.time() - lastDebounceTime > 0.1)
     
     if(touch == 1):

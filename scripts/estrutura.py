@@ -109,11 +109,16 @@ while(1):
 
     #Para mudar a sensibilidade do acelerometro alterar os limites (10000 > accel > 8000)
     
-    if(10000 > accel > 8000 and (time.time() - previousSoundEffectActiv >= soundeEffectInterval)):
+    if(10000 > accel > 6000 and (time.time() - previousSoundEffectActiv >= soundeEffectInterval)):
         previousSoundEffectActiv = time.time()
         print("ACCEL DETECTED")
         midiout.send_message([0x91,notes[5],50]) #parametro da nota segundo numero do midiout.sed_message
-    
+
+    elif(-6000 > accel > -10000 and (time.time() - previousSoundEffectActiv >= soundeEffectInterval)):
+        previousSoundEffectActiv = time.time()
+        print("ACCEL DETECTED")
+        midiout.send_message([0x91,notes[1],50])
+
     if(time.time() - previousSoundEffectActiv >= noteHold): 
         previousSoundEffect = time.time()
         #print("ACCEL SOUND EFFECT OFF")

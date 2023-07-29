@@ -9,12 +9,12 @@ contato = 'COM5'
 if len(sys.argv) > 1:
     contato = 'COM' + sys.argv[1]
 
-serialPort = serial.Serial(port = contato, baudrate=115200, bytesize=8, timeout=2, stopbits=serial.STOPBITS_ONE)
+serialPort = serial.Serial(port = contato, baudrate=115200, bytesize=8, timeout=2, stopbits=serial.STOPBITS_ONE, rtscts=True)
 serialString = ''
 
 midiout = rtmidi.MidiOut()
 print(midiout.get_ports())
-port = midiout.open_port(1)
+port = midiout.open_port(5)
 
 #Variaveis do sensor
 gyro = 0
@@ -24,14 +24,14 @@ touch = 0
 #Variaveis 
 note = ('a',0)
 last_note = 0
-notes = [62,63,65,69,70,72]
+notes = [62,63,65,69,70]
 notes_delay = [0] * len(notes)
-lastDebounceTime = 0.5  
-noteHold = 0.005
+lastDebounceTime = 0.1 
+noteHold = 0.2
 soundEffectDuration = 0.2
 previousSoundEffect = 1
 soundeEffectInterval = 2
-previousSoundEffectActiv = 0
+previousSoundEffectActiv = 0.1
 
 print(notes_delay)
 
@@ -76,23 +76,23 @@ while(1):
         if(note != last_note):
             assignTimes(note[1])
             last_note = note
-            midiout.send_message([0x90,note[1],50])
+            midiout.send_message([0x90,note[1],30])
             print("MIDI ON" + str(time.time()))
         else:
             if(can == True):
                 last_note = note
                 assignTimes(note[1])
-                midiout.send_message([0x90,note[1],50])
+                midiout.send_message([0x90,note[1],30])
                 print("MIDI ON"+ str(time.time()))
     
     for i in range(len(notes)):
         if((time.time() - notes_delay[i] > noteHold)):
            #print(f"Off + " + str(note))
             if(notes[i] != note[1]):
-                midiout.send_message([0x80,notes[i],50])
+                midiout.send_message([0x80,notes[i],30])
                 pass
             elif(touch !=1):
-                midiout.send_message([0x80,note[1],50])
+                midiout.send_message([0x80,note[1],30])
                 pass
     
     if(11000 > accel > 8000 and (time.time() - previousSoundEffectActiv >= soundeEffectInterval)):
