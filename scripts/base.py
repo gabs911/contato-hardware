@@ -26,8 +26,8 @@ last_note = 0
 notes = [60,62,64,65,67,69,71]
 notes_delay = [0] * len(notes)
 lastDebounceTime = 0.1 
-noteHold = 0.3 
-soundEffectDuration = 0.2 
+noteHold = 0.5
+soundEffectDuration = 1 
 previousSoundEffect = 1 
 soundeEffectInterval = 2 
 previousSoundEffectActiv = 0.1
@@ -96,12 +96,12 @@ while(1):
                 pass
 
     
-    if(10000 > accel > 6000 and (time.time() - previousSoundEffectActiv >= soundeEffectInterval)):
+    if(10000 > accel > 8000 and (time.time() - previousSoundEffectActiv >= soundeEffectInterval)):
         previousSoundEffectActiv = time.time()
         print("ACCEL DETECTED")
-        midiout.send_message([0x91,notes[5],50]) 
+        midiout.send_message([0x91,notes[1],100]) 
 
-    elif(-6000 > accel > -10000 and (time.time() - previousSoundEffectActiv >= soundeEffectInterval)):
+    elif(-8000 > accel > -10000 and (time.time() - previousSoundEffectActiv >= soundeEffectInterval)):
         previousSoundEffectActiv = time.time()
         print("ACCEL DETECTED")
         midiout.send_message([0x91,notes[1],100])
@@ -109,4 +109,4 @@ while(1):
     if(time.time() - previousSoundEffectActiv >= noteHold):
         previousSoundEffect = time.time()
         #print("ACCEL SOUND EFFECT OFF")
-        midiout.send_message([0x81,notes[5],50]) 
+        midiout.send_message([0x81,notes[1],100]) 

@@ -14,25 +14,24 @@ serialString = ''
 
 midiout = rtmidi.MidiOut()
 print(midiout.get_ports())
-port = midiout.open_port(8)
+port = midiout.open_port(3)
 
-#Variaveis do sensor
+#Sensor variables
 gyro = 0
 accel = 0
 touch = 0
 
-#Variaveis 
+#variables
 note = ('a',0)
 last_note = 0
-notes = [51,53,56,59]
+notes = [79,81,83,86]
 notes_delay = [0] * len(notes)
 lastDebounceTime = 0.1  
-noteHold = 0.005
+noteHold = 0.2
 soundEffectDuration = 2
 previousSoundEffect = 3
 soundeEffectInterval = 2
 previousSoundEffectActiv = 0.1
-
 
 def assignTimes(note):
     
@@ -42,29 +41,34 @@ def assignTimes(note):
 
 while(1):
 
+    #gyro, accel, touch = getSensorData()
     if(serialPort.in_waiting > 0):
 
+        # Read data out of the buffer until a carraige return / new line is found
         serialString = serialPort.readline()
 
         sensorData = (serialString.decode('utf-8')).split('/')
 
-        #print(serialString) 
+        #print(serialString)
+
+        # Print the contents of the serial data
         id = float(sensorData[0])
         gyro = float(sensorData[1])
         accel = float(sensorData[2])
         touch = float(sensorData[3])
-        print('gyro:', gyro, 'acc:', accel, 't:', touch) 
-    
-    if(-120 <= gyro <= -45):
-        note = ('G4',notes[0])
+        print('gyro:', gyro, 'acc:', accel, 't:', touch)
+
+    #print(accel)     
+    if(-90 <= gyro <= -45):
+        note = ('D7',notes[3])
     elif(-44 <= gyro <= 0):
-        note = ('A4',notes[1])
+        note = ('B6',notes[2])
     elif(1 <= gyro <= 45):
-        note = ('B4',notes[2])
-    elif(46 <= gyro <= 120):
-        note = ('D5',notes[3])
-
-
+        note = ('A6',notes[1])
+    elif(46 <= gyro <= 90):
+        note = ('G6',notes[0])
+  
+    
     can = (note == last_note) and (time.time() - lastDebounceTime > 0.1)
     
     if(touch == 1):
