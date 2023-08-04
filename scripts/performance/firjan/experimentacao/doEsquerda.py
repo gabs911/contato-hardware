@@ -55,17 +55,17 @@ while(1):
         print('gyro:', gyro, 'acc:', accel, 't:', touch) 
     
     if(-90 <= gyro <= -65):
-        note = ('B5',notes[0])
+        note = ('C5',notes[0])
     elif(-64 <= gyro <= -39):
-        note = ('B5',notes[1])
+        note = ('D5',notes[1])
     elif(-38 <= gyro <= -13):
-        note = ('B5',notes[2])
+        note = ('E5',notes[2])
     elif(-12 <= gyro <= 13):
-        note = ('B5',notes[3])
+        note = ('F5',notes[3])
     elif(14 <= gyro <= 39):
-        note = ('B5',notes[4])
+        note = ('G5',notes[4])
     elif(40 <= gyro <= 65):
-        note = ('B5',notes[5])
+        note = ('A5',notes[5])
     elif(66 <= gyro <= 90):
         note = ('B5',notes[6])
 
