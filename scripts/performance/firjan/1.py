@@ -76,7 +76,7 @@ while(1):
         if(note != last_note):
             assignTimes(note[1])
             last_note = note
-            midiout.send_message([0x90,note[1],100])
+            midiout.send_message([0x90,note[1],50])
             print("MIDI ON" + str(time.time()))
         else:
             if(can == True):
