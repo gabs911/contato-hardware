@@ -29,7 +29,7 @@ void dmpDataReady() {
 }
 
 //ESPNOW Initialization
-uint8_t broadcastAddress[] = {0x7C, 0x9E, 0xBD, 0x39, 0xF0, 0x1C};
+uint8_t broadcastAddress[] = {0xB0, 0xA7, 0x32, 0xD7, 0x58, 0x7C};
 //Message Struct
 typedef struct struct_message {
     int id; // must be unique for each sender board
@@ -37,6 +37,7 @@ typedef struct struct_message {
     int accel;
     int touch;
 } struct_message;
+
 struct_message MIDImessage;
 esp_now_peer_info_t peerInfo;
 void OnDataSent(const uint8_t *mac_addr, esp_now_send_status_t status) {
@@ -46,15 +47,7 @@ void OnDataSent(const uint8_t *mac_addr, esp_now_send_status_t status) {
 
 //Variables
 float ypr_mod = 0;
-int note_anterior = 60;
-int note_atual = 0;
-char note;
-int fsrPin = 25;
-int fsr =0;
-
 int mediaAccel;
-
-
 int buttonState;             // the current reading from the input pin
 int lastButtonState = 0;
 
@@ -153,20 +146,13 @@ void loop() {
         mpu.dmpGetLinearAccel(&aaReal, &aa, &gravity);
         ypr_mod = ypr[2] * 180/M_PI;
 
-      
-
-        int pressed = touchRead();
-  
+        int pressed = touchRead();  
     
         MIDImessage.gyro = ypr_mod;
         MIDImessage.accel = mediaAccel;
         MIDImessage.touch = pressed;
         esp_now_send(broadcastAddress, (uint8_t *) &MIDImessage, sizeof(MIDImessage));
         Serial.println("MIDI SENT");
-
-
-
-
    }
    
   delay(10);
@@ -185,7 +171,7 @@ int touchRead()
   }
   media =  media/100;
   mediaAccel = mediaAccel/100;
-  if (media < 15)
+  if (media < 20)
   {
     return 1;
   }
