@@ -67,6 +67,7 @@ while(1):
         note = ('A5',notes[5])
     elif(66 <= gyro <= 90):
         note = ('B5',notes[6])
+    
 
 
     can = (note == last_note) and (time.time() - lastDebounceTime > 0.1)

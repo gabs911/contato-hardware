@@ -71,13 +71,13 @@ while(1):
             assignTimes(note[1])
             last_note = note
             midiout.send_message([0x90,note[1],50])
-            print("MIDI ON" + str(time.time()))
+            #print("MIDI ON" + str(time.time()))
         else:
             if(can == True):
                 last_note = note
                 assignTimes(note[1])
                 midiout.send_message([0x90,note[1],50])
-                print("MIDI ON"+ str(time.time()))
+                #print("MIDI ON"+ str(time.time()))
     
     for i in range(len(notes)):
         if((time.time() - notes_delay[i] > noteHold)):
@@ -92,12 +92,12 @@ while(1):
     
     if(6500 > accel > 14000 and (time.time() - previousSoundEffectActiv >= soundeEffectInterval)):
         previousSoundEffectActiv = time.time()
-        print("ACCEL DETECTED")
+        #print("ACCEL DETECTED")
         midiout.send_message([0x91,notes[0],50])
     
     elif(-6500 > accel > -14000 and (time.time() - previousSoundEffectActiv >= soundeEffectInterval)):
         previousSoundEffectActiv = time.time()
-        print("ACCEL DETECTED")
+        #print("ACCEL DETECTED")
         midiout.send_message([0x91,notes[0],50]) 
     
     if(time.time() - previousSoundEffectActiv >= soundEffectDuration):
