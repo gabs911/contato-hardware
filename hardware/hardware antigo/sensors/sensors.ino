@@ -132,7 +132,7 @@ void setup() {
 
 void loop() {
   
-    MIDImessage.id = 1;
+    MIDImessage.id = 2;
     // if programming failed, don't try to do anything
     if (!dmpReady) return;
     // read a packet from FIFO

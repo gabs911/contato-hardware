@@ -22,16 +22,19 @@ typedef struct struct_message {
     int touch;
 } struct_message;
 
+int lastnote = 60;
+
 
 
 // Create a struct_message called myData
 struct_message MIDImessage;
 
 // Create a structure to hold the readings from each board
-//struct_message board;
+struct_message board1;
+struct_message board2;
 
 // Create an array with all the structures
-
+struct_message boardsStruct[3] = {board1, board2};
 
 // callback function that will be executed when data is received
 void OnDataRecv(const uint8_t * mac_addr, const uint8_t *incomingData, int len) {
@@ -39,10 +42,13 @@ void OnDataRecv(const uint8_t * mac_addr, const uint8_t *incomingData, int len) 
   char macStr[18];
   memcpy(&MIDImessage, incomingData, sizeof(MIDImessage));
 //  Serial.printf("Board ID %u: %u bytes\n", MIDImessage.id, len);
-
+  // Update the structures with the new incoming data
+  boardsStruct[MIDImessage.id-1].gyro = MIDImessage.gyro;
+  boardsStruct[MIDImessage.id-1].accel = MIDImessage.accel;
+  boardsStruct[MIDImessage.id-1].touch = MIDImessage.touch;
 
     
-  Serial.println(String(MIDImessage.id)+'/'+String(MIDImessage.gyro)+'/'+String(MIDImessage.accel)+'/'+String(MIDImessage.touch));
+    Serial.println(String(MIDImessage.gyro)+'/'+String(MIDImessage.accel)+'/'+String(MIDImessage.touch));
  
 }
  

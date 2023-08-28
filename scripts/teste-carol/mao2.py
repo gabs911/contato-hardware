@@ -54,13 +54,21 @@ while(1):
         touch = float(sensorData[3])
         print('gyro:', gyro, 'acc:', accel, 't:', touch) 
     
-    if(-90 <= gyro <= -45):
+    if(-180 <= gyro <= -135):
         note = ('G4',notes[3])
-    elif(-44 <= gyro <= 0):
+    elif(-134 <= gyro <= -90):
         note = ('A4',notes[2])
-    elif(1 <= gyro <= 45):
+    elif(-89 <= gyro <= -45):
         note = ('B4',notes[1])
-    elif(46 <= gyro <= 90):
+    elif(-44 <= gyro <= 0):
+        note = ('D5',notes[0])
+    elif(1 <= gyro <= 44):
+        note = ('D5',notes[3])
+    elif(45 <= gyro <= 89):
+        note = ('D5',notes[2])
+    elif(90 <= gyro <= 134):
+        note = ('D5',notes[1])
+    elif(135 <= gyro <= 180):
         note = ('D5',notes[0])
 
 
