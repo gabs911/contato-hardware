@@ -24,7 +24,7 @@ touch = 0
 #variables
 note = ('a',0)
 last_note = 0
-notes = [79,81,83,86]
+notes = [48,49,55,56]
 notes_delay = [0] * len(notes)
 lastDebounceTime = 0.1  
 noteHold = 0.2

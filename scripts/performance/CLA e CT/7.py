@@ -14,7 +14,7 @@ serialString = ''
 
 midiout = rtmidi.MidiOut()
 print(midiout.get_ports())
-port = midiout.open_port(3)
+port = midiout.open_port(7)
 
 #Variaveis do sensor
 gyro = 0
@@ -24,7 +24,7 @@ touch = 0
 #Variaveis 
 note = ('a',0)
 last_note = 0
-notes = [61,75,77,80,70]
+notes = [33,75,77,80,70]
 notes_delay = [0] * len(notes)
 lastDebounceTime = 0.1  
 noteHold = 0.005
