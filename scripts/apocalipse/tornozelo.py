@@ -1,3 +1,4 @@
+#Esquerda
 
 import serial
 import time
@@ -30,7 +31,7 @@ lastDebounceTime = 0.1
 noteHold = 0.005
 soundEffectDuration = 1
 previousSoundEffect = 1
-soundeEffectInterval = 1
+soundeEffectInterval = 1.5
 previousSoundEffectActiv = 0
 
 def assignTimes(note):
@@ -52,7 +53,7 @@ while(1):
         gyro = float(sensorData[1])
         accel = float(sensorData[2])
         touch = float(sensorData[3])
-        print('gyro:', gyro, 'acc:', accel, 't:', touch) 
+        print(int(id), 'gyro:', gyro, 'acc:', accel, 't:', int(touch))
     
     if(-90 <= gyro <= -45):
         note = ('G4',notes[3])
@@ -91,12 +92,12 @@ while(1):
                 pass
 
     
-    if(6500 > accel > 14000 and (time.time() - previousSoundEffectActiv >= soundeEffectInterval)):
+    if(8000 > accel > 14000 and (time.time() - previousSoundEffectActiv >= soundeEffectInterval)):
         previousSoundEffectActiv = time.time()
         #print("ACCEL DETECTED")
         midiout.send_message([0x91,notes[0],50])
     
-    elif(-6500 > accel > -14000 and (time.time() - previousSoundEffectActiv >= soundeEffectInterval)):
+    elif(-8000 > accel > -14000 and (time.time() - previousSoundEffectActiv >= soundeEffectInterval)):
         previousSoundEffectActiv = time.time()
         #print("ACCEL DETECTED")
         midiout.send_message([0x91,notes[0],50]) 

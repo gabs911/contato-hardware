@@ -1,3 +1,6 @@
+#Direita 
+
+
 import serial
 import time
 import rtmidi
@@ -52,7 +55,7 @@ while(1):
         gyro = float(sensorData[1])
         accel = float(sensorData[2])
         touch = float(sensorData[3])
-        print('gyro:', gyro, 'acc:', accel, 't:', touch) 
+        print(int(id), 'gyro:', gyro, 'acc:', accel, 't:', int(touch))
     
     if(-90 <= gyro <= -45):
         note = ('G4',notes[3])

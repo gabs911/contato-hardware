@@ -1,9 +1,10 @@
+#Musica: Paixão 
+#Mão esquerda
 
 import serial
 import time
 import rtmidi
 import sys
-
 
 contato = 'COM5'
 if len(sys.argv) > 1:
@@ -14,26 +15,24 @@ serialString = ''
 
 midiout = rtmidi.MidiOut()
 print(midiout.get_ports())
-port = midiout.open_port(4)
+port = midiout.open_port(2)
 
-#Variaveis do sensor
+#Sensor variables
 gyro = 0
 accel = 0
 touch = 0
 
-#Variaveis 
+#variables
 note = ('a',0)
 last_note = 0
-notes = [62,63,65,69,70]
+notes = [74,76,77,78,79]
 notes_delay = [0] * len(notes)
-lastDebounceTime = 0.1 
+lastDebounceTime = 0.1  
 noteHold = 0.2
-soundEffectDuration = 0.2
-previousSoundEffect = 1
+soundEffectDuration = 2
+previousSoundEffect = 3
 soundeEffectInterval = 2
 previousSoundEffectActiv = 0.1
-
-print(notes_delay)
 
 def assignTimes(note):
     
@@ -45,38 +44,43 @@ while(1):
 
     #gyro, accel, touch = getSensorData()
     if(serialPort.in_waiting > 0):
-        serialString = serialPort.readline()
-        sensorData = (serialString.decode('utf-8')).split('/')
-        #print(serialString) 
 
-        # Print do conteudo do serial data
+        # Read data out of the buffer until a carraige return / new line is found
+        serialString = serialPort.readline()
+
+        sensorData = (serialString.decode('utf-8')).split('/')
+
+        #print(serialString)
+
+        # Print the contents of the serial data
         id = float(sensorData[0])
         gyro = float(sensorData[1])
         accel = float(sensorData[2])
         touch = float(sensorData[3])
         print(int(id), 'gyro:', gyro, 'acc:', accel, 't:', int(touch))
-    
-    #print(accel)   
+
+    #print(accel)    
     if(-90 <= gyro <= -55):
-        note = ('A#5',notes[4])
+        note = ('D6',notes[0])
     elif(-56 <= gyro <= -21):
-        note = ('A5',notes[3])
+        note = ('E6',notes[1])
     elif(-20 <= gyro <= 15):
-        note = ('F5',notes[2])
+        note = ('F6',notes[2])
     elif(16 <= gyro <= 51):
-        note = ('D#5',notes[1])
-    elif(52 <= gyro <= 120):
-        note = ('D5',notes[0])
-
-    can = (note == last_note) and (time.time() - lastDebounceTime > 0.1)  
-
+        note = ('F#6',notes[3])
+    elif(52 <= gyro <= 90):
+        note = ('G6',notes[4])
+  
+    
+    can = (note == last_note) and (time.time() - lastDebounceTime > 0.1)
+    
     if(touch == 1):
         lastDebounceTime = time.time()
         if(note != last_note):
             assignTimes(note[1])
             last_note = note
             midiout.send_message([0x90,note[1],50])
-            #print("MIDI ON" + str(time.time()))
+            print("MIDI ON" + str(time.time()))
         else:
             if(can == True):
                 last_note = note
@@ -93,20 +97,3 @@ while(1):
             elif(touch !=1):
                 midiout.send_message([0x80,note[1],50])
                 pass
-
-    
-    if(6000 > accel > 10000 and (time.time() - previousSoundEffectActiv >= soundeEffectInterval)):
-        previousSoundEffectActiv = time.time()
-        #print("ACCEL DETECTED")
-        midiout.send_message([0x91,notes[1],50]) 
-
-    elif(-6000 > accel > -10000 and (time.time() - previousSoundEffectActiv >= soundeEffectInterval)):
-        previousSoundEffectActiv = time.time()
-        #print("ACCEL DETECTED")
-        midiout.send_message([0x91,notes[1],50])
-    
-    if(time.time() - previousSoundEffectActiv >= noteHold):
-        previousSoundEffect = time.time()
-        #print("ACCEL SOUND EFFECT OFF")
-        midiout.send_message([0x81,notes[1],50]) 
-

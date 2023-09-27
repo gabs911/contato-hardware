@@ -30,7 +30,7 @@ lastDebounceTime = 0.1
 noteHold = 0.005
 soundEffectDuration = 1
 previousSoundEffect = 1
-soundeEffectInterval = 1
+soundeEffectInterval = 1.5
 previousSoundEffectActiv = 0
 
 def assignTimes(note):
@@ -52,7 +52,7 @@ while(1):
         gyro = float(sensorData[1])
         accel = float(sensorData[2])
         touch = float(sensorData[3])
-        print('gyro:', gyro, 'acc:', accel, 't:', touch) 
+        print(int(id), 'gyro:', gyro, 'acc:', accel, 't:', int(touch))
     
     if(-90 <= gyro <= -45):
         note = ('G4',notes[3])

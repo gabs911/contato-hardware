@@ -55,7 +55,7 @@ while(1):
         gyro = float(sensorData[1])
         accel = float(sensorData[2])
         touch = float(sensorData[3])
-        print('gyro:', gyro, 'acc:', accel, 't:', touch) 
+        print(int(id), 'gyro:', gyro, 'acc:', accel, 't:', int(touch)) 
  
     if(-120 <= gyro <= -30):
         note = ('C5',notes[2])
@@ -96,7 +96,7 @@ while(1):
         #print("ACCEL DETECTED")
         midiout.send_message([0x91,notes[1],50]) 
 
-    elif(-8000 > accel > -14000 and (time.time() - previousSoundEffectActiv >= soundeEffectInterval)):
+    elif(-10000 > accel > -14000 and (time.time() - previousSoundEffectActiv >= soundeEffectInterval)):
         previousSoundEffectActiv = time.time()
         #print("ACCEL DETECTED")
         midiout.send_message([0x91,notes[1],50])
