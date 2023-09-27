@@ -1,3 +1,5 @@
+#G
+
 
 import serial
 import time

@@ -1,5 +1,5 @@
 #Musica: Paixão 
-#Mão direita
+#Mão esquerda
 
 import serial
 import time
@@ -15,7 +15,7 @@ serialString = ''
 
 midiout = rtmidi.MidiOut()
 print(midiout.get_ports())
-port = midiout.open_port(1)
+port = midiout.open_port(2)
 
 #Sensor variables
 gyro = 0
@@ -25,7 +25,7 @@ touch = 0
 #variables
 note = ('a',0)
 last_note = 0
-notes = [79,81,83,86]
+notes = [74,76,77,78,79]
 notes_delay = [0] * len(notes)
 lastDebounceTime = 0.1  
 noteHold = 0.2
@@ -59,15 +59,17 @@ while(1):
         touch = float(sensorData[3])
         print(int(id), 'gyro:', gyro, 'acc:', accel, 't:', int(touch))
 
-    #print(accel)     
-    if(-90 <= gyro <= -45):
-        note = ('D7',notes[3])
-    elif(-44 <= gyro <= 0):
-        note = ('B6',notes[2])
-    elif(1 <= gyro <= 45):
-        note = ('A6',notes[1])
-    elif(46 <= gyro <= 90):
-        note = ('G6',notes[0])
+    #print(accel)    
+    if(-90 <= gyro <= -55):
+        note = ('D6',notes[0])
+    elif(-56 <= gyro <= -21):
+        note = ('E6',notes[1])
+    elif(-20 <= gyro <= 15):
+        note = ('F6',notes[2])
+    elif(16 <= gyro <= 51):
+        note = ('F#6',notes[3])
+    elif(52 <= gyro <= 90):
+        note = ('G6',notes[4])
   
     
     can = (note == last_note) and (time.time() - lastDebounceTime > 0.1)
@@ -95,3 +97,4 @@ while(1):
             elif(touch !=1):
                 midiout.send_message([0x80,note[1],50])
                 pass
+
