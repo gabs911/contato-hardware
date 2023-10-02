@@ -6,7 +6,7 @@ import time
 import rtmidi
 import sys
 
-contato = 'COM5'
+contato = 'COM15'
 if len(sys.argv) > 1:
     contato = 'COM' + sys.argv[1]
 
@@ -93,12 +93,12 @@ while(1):
                 pass
 
     
-    if(14000 > accel > 16000 and (time.time() - previousSoundEffectActiv >= soundeEffectInterval)):
+    if(13000 > accel > 16000 and (time.time() - previousSoundEffectActiv >= soundeEffectInterval)):
         previousSoundEffectActiv = time.time()
         #print("ACCEL DETECTED")
         midiout.send_message([0x91,notes[1],50]) 
 
-    elif(-17000 > accel > -20000 and (time.time() - previousSoundEffectActiv >= soundeEffectInterval)):
+    elif(-14000 > accel > -17000 and (time.time() - previousSoundEffectActiv >= soundeEffectInterval)):
         previousSoundEffectActiv = time.time()
         #print("ACCEL DETECTED")
         midiout.send_message([0x91,notes[1],50])
