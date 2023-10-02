@@ -1,4 +1,4 @@
-#Musica: Estrondo
+#Música: Estrondo versão Nidia
 #Mão direita
 
 import serial
@@ -16,21 +16,21 @@ serialString = ''
 
 midiout = rtmidi.MidiOut()
 print(midiout.get_ports())
-port = midiout.open_port(5)
+port = midiout.open_port(2)
 
-#Variaveis do sensor
+#Variáveis do sensor
 gyro = 0
 accel = 0
 touch = 0
 
-#Variaveis 
+#Variáveis 
 note = ('a',0)
 last_note = 0
-notes = [51,53,56,59]
+notes = [33,75,77,80]
 notes_delay = [0] * len(notes)
 lastDebounceTime = 0.1  
 noteHold = 0.005
-soundEffectDuration = 2
+soundEffectDuration = 0.2
 previousSoundEffect = 3
 soundeEffectInterval = 2
 previousSoundEffectActiv = 0.1
@@ -57,6 +57,7 @@ while(1):
         touch = float(sensorData[3])
         print(int(id), 'gyro:', gyro, 'acc:', accel, 't:', int(touch))
     
+    #if e else da escala de notas (quanto menor a nota mais grave)
     if(-90 <= gyro <= -45):
         note = ('G4',notes[3])
     elif(-44 <= gyro <= 0):
@@ -92,3 +93,21 @@ while(1):
             elif(touch !=1):
                 midiout.send_message([0x80,note[1],30])
                 pass
+   
+   #if e else do acelerômetro - para frente
+    if(8000 > accel > 14000 and (time.time() - previousSoundEffectActiv >= soundeEffectInterval)):
+        previousSoundEffectActiv = time.time()
+        #print("ACCEL DETECTED")
+        midiout.send_message([0x91,notes[0],50])
+
+   #if e else do acelerômetro - para trás 
+    elif(-8000 > accel > -14000 and (time.time() - previousSoundEffectActiv >= soundeEffectInterval)):
+        previousSoundEffectActiv = time.time()
+        #print("ACCEL DETECTED")
+        midiout.send_message([0x91,notes[0],50]) 
+    
+    #duração da nota
+    if(time.time() - previousSoundEffectActiv >= soundEffectDuration):
+        previousSoundEffect = time.time()
+        #print("ACCEL SOUND EFFECT OFF")
+        midiout.send_message([0x81,notes[0],50])

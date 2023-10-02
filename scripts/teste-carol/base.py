@@ -14,7 +14,7 @@ serialString = ''
 midiout = rtmidi.MidiOut()
 print(midiout.get_ports())
 port = midiout.open_port(1)
-port2 = midiout.open_port(2)
+port2 = midiout.open_port(4)
 
 #Variaveis do sensor
 gyro = 0
@@ -99,18 +99,19 @@ while(1):
             elif(touch !=1):
                 midiout.send_message([0x80,note[1],100])
                 pass
+while(2):
 
-    if(10000 > accel > 6000 and (time.time() - previousSoundEffectActiv >= soundeEffectInterval)):
+    if((8000 > accel > 16000) and (time.time() - previousSoundEffectActiv >= soundeEffectInterval)):
         previousSoundEffectActiv = time.time()
         #print("ACCEL DETECTED")
-        midiout.send_message([0x91,notes[5],50]) 
+        midiout.send_message([0x91,notes[1],50]) 
 
-    elif(-6000 > accel > -10000 and (time.time() - previousSoundEffectActiv >= soundeEffectInterval)):
+    elif((-8000 > accel > -16000) and (time.time() - previousSoundEffectActiv >= soundeEffectInterval)):
         previousSoundEffectActiv = time.time()
         #print("ACCEL DETECTED")
-        midiout.send_message([0x91,notes[1],100])
+        midiout.send_message([0x91,notes[1],50])
     
     if(time.time() - previousSoundEffectActiv >= noteHold):
-        previousSoundEffect = time.time()
-        #print("ACCEL SOUND EFFECT OFF")
-        midiout.send_message([0x81,notes[5],50]) 
+            previousSoundEffect = time.time()
+            #print("ACCEL SOUND EFFECT OFF")
+            midiout.send_message([0x81,notes[1],50]) 
