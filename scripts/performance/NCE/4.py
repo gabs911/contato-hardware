@@ -61,13 +61,13 @@ while(1):
 
     #print(accel)     
     if(-90 <= gyro <= -45):
-        note = ('D7',notes[3])
+        note = ('D7',notes[0])
     elif(-44 <= gyro <= 0):
-        note = ('B6',notes[2])
+        note = ('B6',notes[1])
     elif(1 <= gyro <= 45):
-        note = ('A6',notes[1])
+        note = ('A6',notes[2])
     elif(46 <= gyro <= 90):
-        note = ('G6',notes[0])
+        note = ('G6',notes[3])
   
     
     can = (note == last_note) and (time.time() - lastDebounceTime > 0.1)
