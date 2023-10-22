@@ -29,11 +29,11 @@ last_note = 0
 notes = [33,75,77,80]
 notes_delay = [0] * len(notes)
 lastDebounceTime = 0.1  
-noteHold = 0.5
-soundEffectDuration = 0.2
-previousSoundEffect = 3
-soundeEffectInterval = 2
-previousSoundEffectActiv = 0.1
+noteHold = 0.2
+soundEffectDuration = 1
+previousSoundEffect = 1
+soundeEffectInterval = 1
+previousSoundEffectActiv = 0
 
 
 def assignTimes(note):
