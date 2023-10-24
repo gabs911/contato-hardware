@@ -6,7 +6,7 @@ import rtmidi
 import sys
 
 
-contato = 'COM5'
+contato = 'COM4'
 if len(sys.argv) > 1:
     contato = 'COM' + sys.argv[1]
 
@@ -15,7 +15,7 @@ serialString = ''
 
 midiout = rtmidi.MidiOut()
 print(midiout.get_ports())
-port = midiout.open_port(6)
+port = midiout.open_port(8)
 
 #Variaveis do sensor
 gyro = 0
