@@ -25,7 +25,7 @@ touch = 0
 #Variaveis 
 note = ('a',0)
 last_note = 0
-notes = [60,62,64,65,67,69,71,72]
+notes = [60,62,64,65,67,69,71,82]
 notes_delay = [0] * len(notes)
 lastDebounceTime = 0.1 
 noteHold = 0.1
@@ -55,22 +55,21 @@ while(1):
         touch = float(sensorData[3])
         print('gyro:', gyro, 'acc:', accel, 't:', touch) 
     
-    if(-104 <= gyro <= -79):
-        note = ('B5',notes[7])
-    elif(-78 <= gyro <= -53):
-        note = ('A5',notes[6])
-    elif(-52 <= gyro <= -27):
-        note = ('G5',notes[5])
-    elif(-26 <= gyro <= -1):
-        note = ('F5',notes[4])
-    elif(0 <= gyro <= 26):
-        note = ('E5',notes[3])
-    elif(26 <= gyro <= 51):
-        note = ('D5',notes[2])
-    elif(52 <= gyro <= 77):
-        note = ('C5',notes[1])
-    elif(78 <= gyro <= 103):
+    if(-103 <= gyro <= -73):
+        note = ('B5',notes[6])
+    elif(-72 <= gyro <= -42):
+        note = ('A5',notes[5])
+    elif(-41 <= gyro <= -11):
+        note = ('G5',notes[4])
+    elif(-10 <= gyro <= 20):
+        note = ('F5',notes[3])
+    elif(21 <= gyro <= 41):
+        note = ('E5',notes[2])
+    elif(42 <= gyro <= 72):
+        note = ('D5',notes[1])
+    elif(73 <= gyro <= 103):
         note = ('C5',notes[0])
+
 
     can = (note == last_note) and (time.time() - lastDebounceTime > 0.1)
     
@@ -92,10 +91,10 @@ while(1):
         if((time.time() - notes_delay[i] > noteHold)):
            #print(f"Off + " + str(note))
             if(notes[i] != note[1]):
-                midiout.send_message([0x80,notes[i],30])
+                #midiout.send_message([0x80,notes[i],30])
                 pass
             elif(touch !=1):
-                midiout.send_message([0x80,note[1],30])
+                #midiout.send_message([0x80,note[1],30])
                 pass
 
     
