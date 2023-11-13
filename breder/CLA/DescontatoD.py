@@ -59,7 +59,7 @@ while(1):
     
     #print(accel)   
     if(-90 <= gyro <= -55):
-        note = ('a',notes[0])
+        note = ('a',notes[0]) 
     elif(-56 <= gyro <= -21):
         note = ('a',notes[1])
     elif(-20 <= gyro <= 15):
@@ -108,7 +108,7 @@ while(1):
         #print("ACCEL DETECTED")
         midiout.send_message([0x91,notes[0],50]) 
     
-    #duração da nota
+    #intervalo de acionamento do acelerômetro 
     if(time.time() - previousSoundEffectActiv >= soundEffectDuration):
         previousSoundEffect = time.time()
         #print("ACCEL SOUND EFFECT OFF")

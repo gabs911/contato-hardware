@@ -6,7 +6,7 @@ import rtmidi
 import sys
 
 
-contato = 'COM5'
+contato = 'COM4'
 if len(sys.argv) > 1:
     contato = 'COM' + sys.argv[1]
 
@@ -53,22 +53,22 @@ while(1):
         gyro = float(sensorData[1])
         accel = float(sensorData[2])
         touch = float(sensorData[3])
-        print('gyro:', gyro, 'acc:', accel, 't:', touch) 
+        print(int(id), 'gyro:', gyro, 'acc:', accel, 't:', int(touch))
     
-    if(-103 <= gyro <= -73):
-        note = ('B5',notes[6])
-    elif(-72 <= gyro <= -42):
-        note = ('A5',notes[5])
-    elif(-41 <= gyro <= -11):
-        note = ('G5',notes[4])
-    elif(-10 <= gyro <= 20):
+    if(-120 <= gyro <= -88):
+        note = ('B5',notes[0])
+    elif(-87 <= gyro <= -51):
+        note = ('A5',notes[1])
+    elif(-50 <= gyro <= -14):
+        note = ('G5',notes[2])
+    elif(-13 <= gyro <= 13):
         note = ('F5',notes[3])
-    elif(21 <= gyro <= 41):
-        note = ('E5',notes[2])
-    elif(42 <= gyro <= 72):
-        note = ('D5',notes[1])
-    elif(73 <= gyro <= 103):
-        note = ('C5',notes[0])
+    elif(14 <= gyro <= 50):
+        note = ('E5',notes[4])
+    elif(51 <= gyro <= 87):
+        note = ('D5',notes[5])
+    elif(88 <= gyro <= 120):
+        note = ('C5',notes[6])
 
 
     can = (note == last_note) and (time.time() - lastDebounceTime > 0.1)

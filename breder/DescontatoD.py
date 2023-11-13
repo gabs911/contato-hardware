@@ -59,15 +59,15 @@ while(1):
     
     #print(accel)   
     if(-90 <= gyro <= -55):
-        note = ('a',notes[0])
+        note = ('a',notes[4])
     elif(-56 <= gyro <= -21):
-        note = ('a',notes[1])
+        note = ('a',notes[3])
     elif(-20 <= gyro <= 15):
         note = ('a',notes[2])
     elif(16 <= gyro <= 51):
-        note = ('a',notes[3])
+        note = ('a',notes[1])
     elif(52 <= gyro <= 90):
-        note = ('a',notes[4])
+        note = ('a',notes[0])
  
 
     can = (note == last_note) and (time.time() - lastDebounceTime > 0.1)  
@@ -77,7 +77,7 @@ while(1):
         if(note != last_note):
             assignTimes(note[1])
             last_note = note
-            midiout.send_message([0x90,note[1],30])
+            midiout.send_message([0x90,note[1],50])
             #print("MIDI ON" + str(time.time()))
         else:
             if(can == True):

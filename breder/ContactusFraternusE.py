@@ -7,7 +7,7 @@ import rtmidi
 import sys
 
 
-contato = 'COM6'
+contato = 'COM5'
 if len(sys.argv) > 1:
     contato = 'COM' + sys.argv[1]
 
@@ -54,19 +54,19 @@ while(1):
         gyro = float(sensorData[1])
         accel = float(sensorData[2])
         touch = float(sensorData[3])
-        print('gyro:', gyro, 'acc:', accel, 't:', touch) 
+        print(int(id), 'gyro:', gyro, 'acc:', accel, 't:', int(touch))
     
-    if(-108 <= gyro <= -73):
+    if(-110 <= gyro <= -73):
         note = ('B5',notes[0])
     elif(-72 <= gyro <= -37):
         note = ('A5',notes[1])
     elif(-36 <= gyro <= -1):
         note = ('G5',notes[2])
-    elif(0 <= gyro <= 35):
+    elif(1 <= gyro <= 36):
         note = ('F5',notes[3])
-    elif(36 <= gyro <= 72):
+    elif(37 <= gyro <= 72):
         note = ('E5',notes[4])
-    elif(73 <= gyro <= 108):
+    elif(73 <= gyro <= 110):
         note = ('E5',notes[5])
 
 
